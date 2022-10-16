@@ -21,19 +21,15 @@ namespace Managers
         private void Start()
         {
             storage = GameObject.FindWithTag("Storage").transform;
-            Debug.Log(storage.tag);
 
             components = new List<Transform>();
             wires = new List<Transform>();
         
             foreach (Transform child in storage)
             {
-                Debug.Log(child.name);
                 if (child.CompareTag("Component")) components.Add(child);
                 if (child.CompareTag("Wire")) wires.Add(child);
             }
-            Debug.Log(components.Count + " " + wires.Count);
-        
             Debug.Log("Initialized Components - Starting Simulation");
             StartCoroutine(SimulationLoop());
         }

@@ -5,6 +5,8 @@ namespace Systems
 {
     public class Pin : MonoBehaviour
     {
+        public PinType pinType;
+        
         private SpriteRenderer spriteRenderer;
 
         private void Start()
@@ -12,14 +14,20 @@ namespace Systems
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        private void OnMouseEnter()
+        public void MouseEnter()
         {
             spriteRenderer.color = Manager.Instance.pinHighlight;
         }
 
-        private void OnMouseExit()
+        public void MouseExit()
         {
             spriteRenderer.color = Manager.Instance.pinDefault;
         }
+    }
+
+    public enum PinType
+    {
+        INPUT,
+        OUTPUT
     }
 } 

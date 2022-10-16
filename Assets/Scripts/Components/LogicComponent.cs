@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Components
 {
-    public abstract class LogicComponent : MonoBehaviour
+    public abstract class LogicComponent : MonoBehaviour, IObject
     {
 
         public List<Wire> inputConnections;
@@ -17,6 +17,11 @@ namespace Components
         public void ComponentUpdate()
         {
             LogicUpdate();
+        }
+
+        public void Connect(IObject connection)
+        {
+            
         }
     }
 }
