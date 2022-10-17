@@ -739,8 +739,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f98a2903c6894e419a324c704da01c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pinHighlight: {r: 178, g: 178, b: 178, a: 1}
-  pinDefault: {r: 0, g: 0, b: 0, a: 1}
+  wireOff: {fileID: 2100000, guid: 02b5750b9016cab4f9e420b772577fb7, type: 2}
+  wireOn: {fileID: 2100000, guid: 9a662cc33525c6a4487bc921b85d8c33, type: 2}
   stubPrefab: {fileID: 910832791177121197, guid: f2f5676289a7f714e895a869b290ea73, type: 3}
   intersectionPrefab: {fileID: 910832791177121197, guid: 6926e9b2a896be940a77db8aba4663bd, type: 3}
 --- !u!1 &1142717119

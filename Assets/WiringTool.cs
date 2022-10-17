@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Components.Types;
 using Systems;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ public class WiringTool : MonoBehaviour
     private Vector2 gridMousePos;
 
     private List<GameObject> wireStartObjects;
+    private List<GameObject> wireEndObjects;
+    
     private List<Vector3> wirePositionSequence;
 
     // Start is called before the first frame update
@@ -41,7 +44,7 @@ public class WiringTool : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && isPlacingWire)
         {
             StopWirePlacement();
             isPlacingWire = false;
@@ -70,9 +73,13 @@ public class WiringTool : MonoBehaviour
     {
         if (previewWire.positionCount > 1)
         {
-
+            wireEndObjects = hoveredObjects;
+            
             GameObject newWire = Instantiate(wirePrefab, wireStorage);
-            newWire.GetComponent<Wire>().Initialize(wirePositionSequence);
+            Wire wire = newWire.GetComponent<Wire>();
+            wire.Initialize(wirePositionSequence);
+            
+            AddWireToSimulation(wire);
         }
         previewWire.gameObject.SetActive(false);
         previewWire.positionCount = 1;
@@ -80,7 +87,9 @@ public class WiringTool : MonoBehaviour
         
         previewWireStub.SetActive(false);
         previewWireStub.transform.position = Vector3.zero;
+        
 
+        wireEndObjects.Clear();
         wireStartObjects.Clear();
     }
 
@@ -128,6 +137,22 @@ public class WiringTool : MonoBehaviour
         {
             selectionCursor.SetActive(false);
             hoveredObjects.Clear();
+        }
+    }
+
+    private void AddWireToSimulation(Wire wire)
+    {
+        foreach (GameObject wireInput in wireStartObjects)
+        {
+            wireInput.GetComponent<WireInterface>().ConnectWire(wire);
+        }
+
+        foreach (GameObject inputPin in wireEndObjects)
+        {
+            if (inputPin.CompareTag("Pin"))
+            {
+                inputPin.GetComponent<Pin>().ConnectWire(wire);
+            }
         }
     }
 }

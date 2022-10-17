@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using Components;
 using Components.Types;
 using Managers;
@@ -7,25 +8,28 @@ using UnityEngine;
 
 namespace Systems
 {
-    public class Wire : BaseComponent
+    public class Wire : WireInterface
     {
 
         public GameObject stub;
         public GameObject intersection;
 
+        public List<Wire> connections;
+
+        private bool hasEvaluated;
         private LineRenderer wireRenderer;
         private EdgeCollider2D wireCollider;
-        
-        public List<BaseComponent> connections;
 
-        public bool State { get; set; }
+        public override void ConnectWire(Wire wire)
+        {
+            connections.Add(wire);
+        }
         
         public void Initialize(List<Vector3> wirePoints)
         {
             wireRenderer = GetComponent<LineRenderer>();
             wireCollider = GetComponent<EdgeCollider2D>();
-
-            wireRenderer.sortingLayerName = "Foreground";
+            
             
             List<Vector2> colliderPoints = new List<Vector2>();
             wireRenderer.positionCount = wirePoints.Count;
@@ -41,12 +45,28 @@ namespace Systems
         }
         
         
-        public void StateUpdate()
+        public void ActivateState()
         {
-            foreach (BaseComponent connection in connections)
+            if (State) return;
+            State = true;
+            foreach (Wire wire in connections)
             {
-
+                wire.ActivateState();
             }
+            Debug.Log("Activated wire " + name);
+            VisualUpdate();
+        }
+
+        public void ResetState() 
+        {
+            State = false;
+            VisualUpdate();
+        }
+
+        public void VisualUpdate()
+        {
+            Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
+            wireRenderer.material = material;
         }
     }
 }

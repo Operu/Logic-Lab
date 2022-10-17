@@ -6,15 +6,14 @@ using UnityEngine;
 
 namespace Systems
 {
-    public class Pin : BaseComponent
+    public class Pin : WireInterface
     {
         public BaseComponent parent;
         public PinType pinType;
-        public bool State { get; private set; }
 
         public List<Wire> connections;
         
-        public void ConnectWire(Wire wire)
+        public override void ConnectWire(Wire wire)
         {
             connections.Add(wire);
         }
@@ -23,15 +22,17 @@ namespace Systems
         {
             if (pinType == PinType.INPUT)
             {
-                if (connections.Any(input => input.State))
-                {
-                    State = true;
-                }
+                State = connections.Any(wire => wire.State);
             }
 
             if (pinType == PinType.OUTPUT)
             {
                 State = parent.State;
+                if (!State) return;
+                foreach (Wire wire in connections)
+                {
+                    wire.ActivateState();
+                }
             }
         }
         

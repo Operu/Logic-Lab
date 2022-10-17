@@ -6,8 +6,8 @@ namespace Managers
     {
         public static Manager Instance { get; private set; }
 
-        public Color pinHighlight = new Color(178, 178, 178);
-        public Color pinDefault = new Color(0, 0, 0);
+        public Material wireOff;
+        public Material wireOn;
 
         public GameObject stubPrefab;
         public GameObject intersectionPrefab;

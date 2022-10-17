@@ -9,10 +9,14 @@ namespace Components.Types
         public List<Pin> inputs;
         public List<Pin> outputs;
 
-        public abstract void LogicUpdate();
+        protected abstract void LogicUpdate();
 
-        public void ComponentUpdate()
+        public override void ComponentUpdate()
         {
+            foreach (Pin inputPin in inputs)
+            {
+                inputPin.EvaluateState();
+            }
             LogicUpdate();
         }
 

@@ -7,15 +7,9 @@ namespace Components
 {
     public class AndGate : LogicComponent
     {
-        // Start is called before the first frame update
-        void Start()
+        protected override void LogicUpdate()
         {
-
-        }
-
-        public override void LogicUpdate()
-        {
-            
+            State = inputs[0].State && inputs[1].State;
         }
     }
 }

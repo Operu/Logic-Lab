@@ -10,7 +10,7 @@ namespace Components.Types
 
         protected abstract void LogicUpdate();
 
-        public void ComponentUpdate()
+        public override void ComponentUpdate()
         {
             LogicUpdate();
         }
