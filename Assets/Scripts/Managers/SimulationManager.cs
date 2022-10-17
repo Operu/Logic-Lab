@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Components;
+using Components.Types;
 using Systems;
 using UnityEngine;
 
@@ -8,27 +9,45 @@ namespace Managers
 {
     public class SimulationManager : MonoBehaviour
     {
+        public Transform componentStorage;
+        
         public float tps = 0.5f;
 
         public bool active = true;
-    
-        private Transform storage;
 
-        private List<Transform> components;
-        private List<Transform> wires;
-    
+        private List<LogicComponent> components;
+        private List<Pin> outputPins;
+
+        public bool TryAddToSimulation(Transform component)
+        {
+            if (component.CompareTag("Component"))
+            {
+                components.Add(component.GetComponent<LogicComponent>());
+                foreach (Transform pin in component)
+                {
+                    if (pin.CompareTag("Pin"))
+                    {
+                        Pin componentPin = pin.GetComponent<Pin>();
+                        if (componentPin.pinType == PinType.OUTPUT)
+                            outputPins.Add(componentPin);
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+        
     
         private void Start()
         {
-            storage = GameObject.FindWithTag("Storage").transform;
 
-            components = new List<Transform>();
-            wires = new List<Transform>();
+            components = new List<LogicComponent>();
+            outputPins = new List<Pin>();
         
-            foreach (Transform child in storage)
+            foreach (Transform child in componentStorage)
             {
-                if (child.CompareTag("Component")) components.Add(child);
-                if (child.CompareTag("Wire")) wires.Add(child);
+                
+                if (!TryAddToSimulation(child)) Debug.LogError("Error adding " + child.name);
             }
             Debug.Log("Initialized Components - Starting Simulation");
             StartCoroutine(SimulationLoop());
@@ -39,15 +58,13 @@ namespace Managers
             float delay = 1 / tps;
             while (active)
             {
-                foreach (Transform component in components)
+                foreach (LogicComponent component in components)
                 {
-                    if((gameObject.GetComponent<LogicComponent>() as LogicComponent) == null) continue;
-                    component.GetComponent<LogicComponent>().ComponentUpdate();
+                    component.LogicUpdate();
                 }
 
-                foreach (Transform wire in wires)
+                foreach (Pin pin in outputPins)
                 {
-                    wire.GetComponent<Wire>().StateUpdate();
                 }
 
                 yield return new WaitForSeconds(delay);

@@ -15,7 +15,6 @@ public class WiringTool : MonoBehaviour
     public GameObject previewWireStub;
     public GameObject selectionCursor;
 
-    
     private List<GameObject> hoveredObjects;
     private bool isPlacingWire;
     private Vector2 gridMousePos;

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Storage
   - Component
+  - Pin
   - Wire
   layers:
   - Default

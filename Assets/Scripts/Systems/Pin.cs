@@ -1,32 +1,46 @@
-﻿using Managers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Components.Types;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 namespace Systems
 {
-    public class Pin : MonoBehaviour
+    public class Pin : BaseComponent
     {
+        public BaseComponent parent;
         public PinType pinType;
+        public bool State { get; private set; }
+
+        public List<Wire> connections;
         
-        private SpriteRenderer spriteRenderer;
-
-        private void Start()
+        public void ConnectWire(Wire wire)
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            connections.Add(wire);
         }
 
-        public void MouseEnter()
+        public void EvaluateState()
         {
-            spriteRenderer.color = Manager.Instance.pinHighlight;
-        }
+            if (pinType == PinType.INPUT)
+            {
+                if (connections.Any(input => input.State))
+                {
+                    State = true;
+                }
+            }
 
-        public void MouseExit()
-        {
-            spriteRenderer.color = Manager.Instance.pinDefault;
+            if (pinType == PinType.OUTPUT)
+            {
+                State = parent.State;
+            }
         }
+        
+        
     }
 
     public enum PinType
     {
+        UNDEFINED,
         INPUT,
         OUTPUT
     }

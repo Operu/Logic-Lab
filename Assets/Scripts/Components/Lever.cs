@@ -1,19 +1,17 @@
-using System.Collections.Generic;
-using System.Transactions;
 using Components.Types;
-using Systems;
+using UnityEngine;
 
 namespace Components
 {
-    public class AndGate : LogicComponent
+    public class Lever : InputComponent
     {
         // Start is called before the first frame update
         void Start()
         {
-
+        
         }
 
-        public override void LogicUpdate()
+        protected override void LogicUpdate()
         {
             
         }
