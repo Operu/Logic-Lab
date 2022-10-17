@@ -23,6 +23,12 @@ public class WiringTool : MonoBehaviour
     private List<GameObject> wireStartObjects;
     private List<Vector3> wirePositionSequence;
 
+    // Start is called before the first frame update
+    private void Start()
+    {
+        hoveredObjects = new List<GameObject>(); 
+    }
+
     // Update is called once per frame
     private void Update()
     {
