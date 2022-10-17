@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Components.Types;
+using Managers;
 using Systems;
 using UnityEngine;
 
@@ -154,5 +155,6 @@ public class WiringTool : MonoBehaviour
                 inputPin.GetComponent<Pin>().ConnectWire(wire);
             }
         }
+        SimulationManager.Instance.AddWireToSimulation(wire);
     }
 }

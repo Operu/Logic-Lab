@@ -360,7 +360,7 @@ PrefabInstance:
       objectReference: {fileID: 2053975090022574446}
     - target: {fileID: 7629575017160304326, guid: 8cf02f7d531bdce4fb15fc1455307197, type: 3}
       propertyPath: pinType
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cf02f7d531bdce4fb15fc1455307197, type: 3}

@@ -53,7 +53,6 @@ namespace Systems
             {
                 wire.ActivateState();
             }
-            Debug.Log("Activated wire " + name);
             VisualUpdate();
         }
 
