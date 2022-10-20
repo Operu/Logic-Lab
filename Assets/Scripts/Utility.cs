@@ -23,9 +23,19 @@ public static class Utility
     {
         return Vector2Int.RoundToInt(input);
     }
+
+    public static Vector2 PreciseRoundVector2(Vector2 input)
+    {
+        return RoundVector2(input * 2) / 2;
+    }
  
     public static Vector2 GridMousePos()
     {
         return RoundVector2(MouseWorldPos());
+    }
+
+    public static Vector2 PreciseGridMousePos()
+    {
+        return PreciseRoundVector2(MouseWorldPos());
     }
 }

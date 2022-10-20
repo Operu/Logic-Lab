@@ -46,7 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1713d05134e048f3a51b99f14a5b2750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 0}
   pinType: 0
+  connections: []
 --- !u!212 &7629575017160304320
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -114,4 +116,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.25

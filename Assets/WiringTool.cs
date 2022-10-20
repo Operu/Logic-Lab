@@ -19,6 +19,7 @@ public class WiringTool : MonoBehaviour
 
     private List<GameObject> hoveredObjects;
     private bool isPlacingWire;
+    private bool isPrecisePlacing;
     private Vector2 gridMousePos;
 
     private List<GameObject> wireStartObjects;
@@ -30,6 +31,7 @@ public class WiringTool : MonoBehaviour
     private void Start()
     {
         hoveredObjects = new List<GameObject>(); 
+        wirePositionSequence = new List<Vector3>();
     }
 
     // Update is called once per frame
@@ -60,8 +62,7 @@ public class WiringTool : MonoBehaviour
     private void StartWirePlacement()
     {
         wireStartObjects = hoveredObjects;
-        wirePositionSequence = new List<Vector3>();
-        
+
         previewWireStub.SetActive(true);
         previewWireStub.transform.position = gridMousePos;
         
@@ -72,7 +73,7 @@ public class WiringTool : MonoBehaviour
 
     private void StopWirePlacement()
     {
-        if (previewWire.positionCount > 1)
+        if (previewWire.positionCount > 1 && !IsPlacingWireInOtherWire())
         {
             wireEndObjects = hoveredObjects;
             
@@ -82,22 +83,19 @@ public class WiringTool : MonoBehaviour
             
             AddWireToSimulation(wire);
         }
-        previewWire.gameObject.SetActive(false);
-        previewWire.positionCount = 1;
-        wirePositionSequence.Clear();
-        
-        previewWireStub.SetActive(false);
-        previewWireStub.transform.position = Vector3.zero;
-        
-
-        wireEndObjects.Clear();
-        wireStartObjects.Clear();
+        ResetWirePlacement();
     }
 
     private void UpdatePreviewWirePlacement()
     {
         if ((Vector2)previewWire.GetPosition(previewWire.positionCount - 1) != gridMousePos)
         {
+            if (IsPlacingWireInOtherWire())
+            {
+                ResetWirePlacement();
+                StartWirePlacement();
+            }
+
             previewWireStub.transform.position = gridMousePos;
             if (previewWire.positionCount > 1)
             {
@@ -114,6 +112,25 @@ public class WiringTool : MonoBehaviour
             previewWire.SetPosition(currentIndex, gridMousePos);
             wirePositionSequence.Add(gridMousePos);
         }
+    }
+
+    private void ResetWirePlacement()
+    {
+        previewWire.gameObject.SetActive(false);
+        previewWire.positionCount = 1;
+        wirePositionSequence.Clear();
+        
+        previewWireStub.SetActive(false);
+        previewWireStub.transform.position = Vector3.zero;
+        
+
+        wireEndObjects.Clear();
+        wireStartObjects.Clear();
+    }
+
+    private bool IsPlacingWireInOtherWire()
+    {
+        return wireStartObjects.Any(x => hoveredObjects.Contains(x));
     }
 
 
@@ -143,16 +160,21 @@ public class WiringTool : MonoBehaviour
 
     private void AddWireToSimulation(Wire wire)
     {
-        foreach (GameObject wireInput in wireStartObjects)
+        foreach (GameObject wireStart in wireStartObjects)
         {
-            wireInput.GetComponent<WireInterface>().ConnectWire(wire);
+            wireStart.GetComponent<WireInterface>().ConnectWire(wire);
+            if (wireStart.CompareTag("Wire"))
+            {
+                wire.ConnectWire(wireStart.GetComponent<Wire>());
+            }
         }
 
-        foreach (GameObject inputPin in wireEndObjects)
+        foreach (GameObject wireEnd in wireEndObjects)
         {
-            if (inputPin.CompareTag("Pin"))
+            wireEnd.GetComponent<WireInterface>().ConnectWire(wire);
+            if (wireEnd.CompareTag("Wire"))
             {
-                inputPin.GetComponent<Pin>().ConnectWire(wire);
+                wire.ConnectWire(wireEnd.GetComponent<Wire>());
             }
         }
         SimulationManager.Instance.AddWireToSimulation(wire);

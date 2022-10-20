@@ -16,6 +16,8 @@ namespace Systems
 
         public List<Wire> connections;
 
+        private SpriteRenderer stubRenderer;
+
         private bool hasEvaluated;
         private LineRenderer wireRenderer;
         private EdgeCollider2D wireCollider;
@@ -42,9 +44,10 @@ namespace Systems
 
             stub = Instantiate(Manager.Instance.stubPrefab, transform);
             stub.transform.position = wireRenderer.GetPosition(wireRenderer.positionCount - 1);
+            stubRenderer = stub.GetComponent<SpriteRenderer>();
         }
-        
-        
+
+
         public void ActivateState()
         {
             if (State) return;
@@ -66,6 +69,7 @@ namespace Systems
         {
             Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
             wireRenderer.material = material;
+            stubRenderer.material = material;
         }
     }
 }

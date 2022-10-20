@@ -1,0 +1,122 @@
+{
+    "name": "PlacerInputs",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "824baae8-45ab-48b9-8a9b-f8ac8eb0dcba",
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "327f7f43-5ee6-477c-928e-ab01736b8fe8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Camera Pan",
+                    "type": "Button",
+                    "id": "41fa2668-cb17-4b6b-8ef8-557a5aac70c4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Destroy",
+                    "type": "Button",
+                    "id": "75f3baf5-f429-4ad2-aeb9-349edc8cedaa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "073047f3-d836-4f94-a714-e3cd2313e957",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "622dd602-a494-44b0-91cf-a1cfc5d9e7b3",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "90b6bd1a-d307-445e-a0a6-c4806dfeb2da",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Camera Pan",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4cc9720e-6fa5-4865-914b-914e4096ec39",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Destroy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6b373311-e73a-4284-831f-9ff9260191b4",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "2ef28618-540e-414b-a282-5bb14ee6111d",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "b1c68483-da4b-4886-945a-26effac2502b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ec60d3db-163f-44e2-9f7f-d7fbe2c0cc92",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
