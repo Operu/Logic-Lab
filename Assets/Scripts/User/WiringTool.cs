@@ -58,29 +58,34 @@ namespace User
             if (!isPlacingWire) return;
             isPlacingWire = false;
 
-
+            Wire firstWire = null;
+            Wire secondWire = null;
+            
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
-                Wire wire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
+                firstWire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
                 var positions = new List<Vector2>
                 {
                     [0] = previewWireToCorner.GetPosition(0),
                     [1] = previewWireToCorner.GetPosition(1)
                 };
-                wire.Initialize(positions);
+                firstWire.Initialize(positions);
             }
 
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
-                Wire wire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
+                secondWire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
                 var positions = new List<Vector2>
                 {
                     [0] = previewWireToPos.GetPosition(0),
                     [1] = previewWireToPos.GetPosition(1)
                 };
-                wire.Initialize(positions);
+                secondWire.Initialize(positions);
             }
             
+            if (firstWire != null) AddWireConnections(firstWire);
+            if (secondWire != null) AddWireConnections(secondWire);
+             
             previewWireToCorner.SetPositions(new [] { Vector3.zero, Vector3.zero });
             previewWireToPos.SetPositions(new [] { Vector3.zero, Vector3.zero });
 
@@ -127,9 +132,8 @@ namespace User
             previewWireToPos.SetPositions(new [] { wireCornerPos - posOffset, (Vector3)gridMousePos + posOffset});
         }
 
-        private void AddWireConnections(EdgeCollider2D subjectWireCollider)
+        private void AddWireConnections(Wire wire)
         {
-            Wire wire = subjectWireCollider.GetComponent<Wire>();
             Vector3 stepPos = wire.startPos;
             Vector3 lineIntervalStep = (wire.endPos - wire.startPos).normalized * 0.5f;
             while (stepPos != wire.endPos)
