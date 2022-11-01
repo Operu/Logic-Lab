@@ -55,20 +55,24 @@ namespace User
         
         private void StopWirePreview()
         {
+            if (!isPlacingWire) return;
             isPlacingWire = false;
 
-            GameObject originWire = Instantiate(wirePrefab, wireStorage);
 
-            var positions = new Vector3[2];
-            previewWireToCorner.GetPositions(positions);
-            originWire.GetComponent<LineRenderer>().SetPositions(positions);
-            originWire.GetComponent<EdgeCollider2D>().SetPoints(new List<Vector2>() 
-                { wireOriginPos, wireOriginPos + wireCornerRelativePos});
-            
+            if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
+            {
+                GameObject originWire = Instantiate(wirePrefab, wireStorage);
+                var positions = new Vector3[2];
+                previewWireToCorner.GetPositions(positions);
+                originWire.GetComponent<LineRenderer>().SetPositions(positions);
+                originWire.GetComponent<EdgeCollider2D>().SetPoints(new List<Vector2>() 
+                    { wireOriginPos, wireOriginPos + wireCornerRelativePos});
+            }
+
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
                 GameObject cornerWire = Instantiate(wirePrefab, wireStorage);
-                positions = new Vector3[2];
+                var positions = new Vector3[2];
                 previewWireToPos.GetPositions(positions);
                 cornerWire.GetComponent<LineRenderer>().SetPositions(positions);
                 cornerWire.GetComponent<EdgeCollider2D>().SetPoints(new List<Vector2>()
@@ -80,6 +84,8 @@ namespace User
 
             previewWireToCorner.gameObject.SetActive(false);
             previewWireToPos.gameObject.SetActive(false); 
+            
+            interaction.ImmediateReUpdate();
         }
 
         private void CalculateCornerPos()

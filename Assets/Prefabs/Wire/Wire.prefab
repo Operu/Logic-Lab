@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4affbf38de1d54d852789f3dc49b2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stub: {fileID: 0}
   intersection: {fileID: 0}
   connections: []
 --- !u!120 &7001611062104555152
@@ -95,7 +94,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.2
     widthCurve:
       serializedVersion: 2
       m_Curve:

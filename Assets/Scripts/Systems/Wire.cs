@@ -37,10 +37,6 @@ namespace Systems
                 colliderPoints.Add(wirePoints[i]);
             }
             wireCollider.SetPoints(colliderPoints);
-
-            stub = Instantiate(Manager.Instance.stubPrefab, transform);
-            stub.transform.position = wireRenderer.GetPosition(wireRenderer.positionCount - 1);
-            stubRenderer = stub.GetComponent<SpriteRenderer>();
         }
 
 
@@ -65,7 +61,6 @@ namespace Systems
         {
             Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
             wireRenderer.material = material;
-            stubRenderer.material = material;
         }
     }
 }

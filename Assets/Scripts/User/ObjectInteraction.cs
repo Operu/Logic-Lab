@@ -23,6 +23,11 @@ namespace User
         public void UpdateMousePos(Vector2 newGridMousePos)
         {
             gridMousePos = newGridMousePos;
+            ImmediateReUpdate();
+        }
+
+        public void ImmediateReUpdate()
+        {
             UpdateSelectedObjects();
             if (selectedObjects.Count > 0)
             {
