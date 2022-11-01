@@ -3,6 +3,7 @@ using System.Linq;
 using Managers;
 using Systems;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.InputSystem;
 
 namespace User
@@ -12,125 +13,110 @@ namespace User
         [SerializeField] private Transform wireStorage;
         [SerializeField] private GameObject wirePrefab;
         
-        [SerializeField] private LineRenderer previewWire;
-        [SerializeField] private GameObject previewWireStub;
-
-        [SerializeField] private GameObject wirePartPrefab;
+        [SerializeField] private LineRenderer previewWireToCorner;
+        [SerializeField] private LineRenderer previewWireToPos;
 
         [SerializeField] private ObjectInteraction interaction;
         
         private bool isPlacingWire;
+
+        private bool isCornerOnXAxis;
+
+        private Vector3 wireOriginPos;
+        private Vector3 wireCornerRelativePos;
+        private Vector3 wireDestinationRelativePos;
         private Vector2 gridMousePos;
         
-        private Vector3 wireOriginPos;
-        
-        private List<GameObject> wireOriginObjects;
-        private List<GameObject> wireEndObjects;
-
-        private List<Vector3> wirePath;
-
-        // Start is called before the first frame update
-        private void Start()
-        {
-            wirePath = new List<Vector3>();
-            wireOriginObjects = new List<GameObject>();
-            wireEndObjects = new List<GameObject>();
-        }
-
         // Left mouse button event 
         public void InteractInput(InputAction.CallbackContext context)
         {
-            if (context.started) StartWirePreviewPlacer();
+            if (context.started) StartWirePreview();
             if (context.canceled) StopWirePreview();
         }
         
+        // Mouse movement event
         public void UpdateMousePosEvent(Vector2 newGridMousePos)
         {
-            if (isPlacingWire)
-            {
-                Vector3 posChange = newGridMousePos - gridMousePos;
-                if (wirePath.Count > 0)
-                {
-                    if (wirePath.Last() + posChange != Vector3.zero)
-                    {
-                        wirePath.Add(posChange);
-                    }
-                    else
-                    {
-                        wirePath.Remove(wirePath.Last());
-                    }
-                }
-            }
             gridMousePos = newGridMousePos;
             if (isPlacingWire) UpdateWirePreview();
         }
 
-        private void StartWirePreviewPlacer()
+        private void StartWirePreview()
         {
-            if (interaction.selectedWireInterfaces.Count ! > 0) return;
-            
-            isPlacingWire = true;
-            wireOriginPos = gridMousePos;
-            
-            wireOriginObjects = interaction.selectedObjects;
-            
+            if (interaction.IsHoveringObject())
+            {
+                isPlacingWire = true;
+                wireOriginPos = gridMousePos;
 
-            previewWireStub.SetActive(true);
-            previewWireStub.transform.position = gridMousePos;
-        
-            previewWire.gameObject.SetActive(true);
-            previewWire.SetPosition(0, wireOriginPos);
+                previewWireToCorner.gameObject.SetActive(true);
+                previewWireToPos.gameObject.SetActive(true);
+            }
         }
         
         private void StopWirePreview()
         {
             isPlacingWire = false;
-            if (wirePath.Count > 0)
+
+            GameObject originWire = Instantiate(wirePrefab, wireStorage);
+
+            var positions = new Vector3[2];
+            previewWireToCorner.GetPositions(positions);
+            originWire.GetComponent<LineRenderer>().SetPositions(positions);
+            originWire.GetComponent<EdgeCollider2D>().SetPoints(new List<Vector2>() 
+                { wireOriginPos, wireOriginPos + wireCornerRelativePos});
+            
+            if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
-                wireEndObjects = interaction.selectedObjects;
+                GameObject cornerWire = Instantiate(wirePrefab, wireStorage);
+                positions = new Vector3[2];
+                previewWireToPos.GetPositions(positions);
+                cornerWire.GetComponent<LineRenderer>().SetPositions(positions);
+                cornerWire.GetComponent<EdgeCollider2D>().SetPoints(new List<Vector2>()
+                    { wireOriginPos + wireCornerRelativePos, gridMousePos });
             }
-            ResetWirePreview();
+            
+            previewWireToCorner.SetPositions(new [] { Vector3.zero, Vector3.zero });
+            previewWireToPos.SetPositions(new [] { Vector3.zero, Vector3.zero });
+
+            previewWireToCorner.gameObject.SetActive(false);
+            previewWireToPos.gameObject.SetActive(false); 
+        }
+
+        private void CalculateCornerPos()
+        {
+            if (isCornerOnXAxis && wireDestinationRelativePos.x == 0)
+            {
+                wireCornerRelativePos = wireDestinationRelativePos;
+                isCornerOnXAxis = false;
+                return;
+            }
+
+            if (!isCornerOnXAxis && wireDestinationRelativePos.y == 0)
+            {
+                wireCornerRelativePos = wireDestinationRelativePos;
+                isCornerOnXAxis = true;
+                return;
+            }
+
+            wireCornerRelativePos = isCornerOnXAxis
+                ? new Vector3(wireDestinationRelativePos.x, 0)
+                : new Vector3(0, wireDestinationRelativePos.y);
         }
         
 
         private void UpdateWirePreview()
         {
-            previewWireStub.transform.position = gridMousePos;
+            wireDestinationRelativePos = (Vector3)gridMousePos - wireOriginPos;
+            CalculateCornerPos();
 
-            previewWire.positionCount = 1;
-            Vector3 summedPosition = wireOriginPos;
-            
-            foreach (Vector3 direction in wirePath)
-            {
-                previewWire.positionCount++;
-                summedPosition += direction;
-                previewWire.SetPosition(previewWire.positionCount, summedPosition);
-            }
-        }
-        
-        private void ResetWirePreview()
-        {
-            previewWire.gameObject.SetActive(false);
-            previewWire.positionCount = 1;
-            wirePath.Clear();
-        
-            previewWireStub.SetActive(false);
-            previewWireStub.transform.position = Vector3.zero;
-        
+            Vector3 wireCornerPos = wireOriginPos + wireCornerRelativePos;
 
-            wireEndObjects.Clear();
-            wireOriginObjects.Clear();
-        }
+            Vector3 cornerOffset = (wireCornerPos - wireOriginPos).normalized * 0.1f;
+            Vector3 posOffset = ((Vector3)gridMousePos - wireCornerPos).normalized * 0.1f;
+            Debug.Log(cornerOffset);
 
-        private void CreateWire()
-        {
-            
-        }
-
-        private void CreateNewWirePart(Vector3 origin, Vector3 destination)
-        {
-            WirePart wirePart = Instantiate(wirePartPrefab).GetComponent<WirePart>();
-            wirePart.PositionLine(wireOriginPos, destination);
+            previewWireToCorner.SetPositions(new [] { wireOriginPos - cornerOffset, wireCornerPos + cornerOffset});
+            previewWireToPos.SetPositions(new [] { wireCornerPos - posOffset, (Vector3)gridMousePos + posOffset});
         }
     }
 }

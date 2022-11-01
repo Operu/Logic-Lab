@@ -10,13 +10,9 @@ namespace Systems
 {
     public class Wire : WireInterface
     {
-
-        public GameObject stub;
         public GameObject intersection;
 
         public List<Wire> connections;
-
-        private SpriteRenderer stubRenderer;
 
         private bool hasEvaluated;
         private LineRenderer wireRenderer;

@@ -12,12 +12,23 @@ namespace User
         public MousePosChangedEvent mousePosChangedEvent;
 
         private Vector2 gridMousePos;
+        private Vector3 lastMousePos;
         
         private void Update()
         {
-            if (gridMousePos != Utility.PreciseGridMousePos())
+            if (lastMousePos != Input.mousePosition)
             {
-                gridMousePos = Utility.PreciseGridMousePos();
+                lastMousePos = Input.mousePosition;
+                MousePositionChanged();
+            }
+        }
+
+        private void MousePositionChanged()
+        {
+            Vector2 currentPos = Utility.PreciseGridMousePos();
+            if (gridMousePos != currentPos)
+            {
+                gridMousePos = currentPos;
                 mousePosChangedEvent.Invoke(gridMousePos); 
             }
         }
