@@ -28,7 +28,7 @@ namespace User
 
         public void ImmediateReUpdate()
         {
-            UpdateSelectedObjects();
+            GetObjectsAtPosition(gridMousePos);
             if (selectedObjects.Count > 0)
             {
                 EnableCursor(gridMousePos);
@@ -41,23 +41,22 @@ namespace User
 
         public bool IsHoveringObject()
         {
-            return selectedObjects.ToList().Count > 0;
+            return selectedObjects.Count > 0;
         }
 
-        private void UpdateSelectedObjects()
+        public List<WireInterface> GetObjectsAtPosition(Vector2 position)
         {
             selectedObjects.Clear();
             selectedWireInterfaces.Clear();
             
             Collider2D[] objectColliders = new Collider2D[2];
-            int foundColliders = Physics2D.OverlapCircle(gridMousePos, 0.1f, new ContactFilter2D().NoFilter(), objectColliders);
+            int foundColliders = Physics2D.OverlapCircle(position, 0.1f, new ContactFilter2D().NoFilter(), objectColliders);
             if (foundColliders > 0)
             {
                 foreach (Collider2D objectCollider in objectColliders)
                 {
                     if (!objectCollider) continue;
-
-
+                    
                     selectedObjects.Add(objectCollider.gameObject);
                     if (objectCollider.TryGetComponent(out WireInterface wireInterface))
                     {
@@ -65,6 +64,7 @@ namespace User
                     }
                 }
             }
+            return selectedWireInterfaces;
         }
 
         private void EnableCursor(Vector3 location)

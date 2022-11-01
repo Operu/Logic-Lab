@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Managers;
 using Systems;
+using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.InputSystem;
 
 namespace User
@@ -61,22 +61,24 @@ namespace User
 
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
-                GameObject originWire = Instantiate(wirePrefab, wireStorage);
-                var positions = new Vector3[2];
-                previewWireToCorner.GetPositions(positions);
-                originWire.GetComponent<LineRenderer>().SetPositions(positions);
-                originWire.GetComponent<EdgeCollider2D>().SetPoints(new List<Vector2>() 
-                    { wireOriginPos, wireOriginPos + wireCornerRelativePos});
+                Wire wire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
+                var positions = new List<Vector2>
+                {
+                    [0] = previewWireToCorner.GetPosition(0),
+                    [1] = previewWireToCorner.GetPosition(1)
+                };
+                wire.Initialize(positions);
             }
 
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
-                GameObject cornerWire = Instantiate(wirePrefab, wireStorage);
-                var positions = new Vector3[2];
-                previewWireToPos.GetPositions(positions);
-                cornerWire.GetComponent<LineRenderer>().SetPositions(positions);
-                cornerWire.GetComponent<EdgeCollider2D>().SetPoints(new List<Vector2>()
-                    { wireOriginPos + wireCornerRelativePos, gridMousePos });
+                Wire wire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
+                var positions = new List<Vector2>
+                {
+                    [0] = previewWireToPos.GetPosition(0),
+                    [1] = previewWireToPos.GetPosition(1)
+                };
+                wire.Initialize(positions);
             }
             
             previewWireToCorner.SetPositions(new [] { Vector3.zero, Vector3.zero });
@@ -123,6 +125,28 @@ namespace User
 
             previewWireToCorner.SetPositions(new [] { wireOriginPos - cornerOffset, wireCornerPos + cornerOffset});
             previewWireToPos.SetPositions(new [] { wireCornerPos - posOffset, (Vector3)gridMousePos + posOffset});
+        }
+
+        private void AddWireConnections(EdgeCollider2D subjectWireCollider)
+        {
+            Wire wire = subjectWireCollider.GetComponent<Wire>();
+            Vector3 stepPos = wire.startPos;
+            Vector3 lineIntervalStep = (wire.endPos - wire.startPos).normalized * 0.5f;
+            while (stepPos != wire.endPos)
+            {
+                List<WireInterface> connections = interaction.GetObjectsAtPosition(stepPos);
+                foreach (WireInterface connection in connections)
+                {
+                    Wire newWire = connection as Wire;
+                    if (newWire != null)
+                    {
+                        wire.ConnectWire(newWire);
+                        newWire.ConnectWire(wire);
+                    }
+                }
+                stepPos += lineIntervalStep;
+            }
+            
         }
     }
 }

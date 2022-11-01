@@ -14,6 +14,9 @@ namespace Systems
 
         public List<Wire> connections;
 
+        public Vector3 startPos;
+        public Vector3 endPos;
+
         private bool hasEvaluated;
         private LineRenderer wireRenderer;
         private EdgeCollider2D wireCollider;
@@ -23,20 +26,18 @@ namespace Systems
             connections.Add(wire);
         }
         
-        public void Initialize(List<Vector3> wirePoints)
+        public void Initialize(List<Vector2> wirePoints)
         {
             wireRenderer = GetComponent<LineRenderer>();
             wireCollider = GetComponent<EdgeCollider2D>();
+
+            startPos = wirePoints[0];
+            endPos = wirePoints[1];
             
-            
-            List<Vector2> colliderPoints = new List<Vector2>();
-            wireRenderer.positionCount = wirePoints.Count;
-            for (int i = 0; i < wireRenderer.positionCount; i++)
-            {
-                wireRenderer.SetPosition(i, wirePoints[i]);
-                colliderPoints.Add(wirePoints[i]);
-            }
-            wireCollider.SetPoints(colliderPoints);
+            wireCollider.SetPoints(wirePoints);
+
+            Vector3 wireDirection = (endPos - startPos).normalized * 0.1f;
+            wireRenderer.SetPositions(new Vector3[] { startPos - wireDirection, endPos + wireDirection});
         }
 
 
@@ -57,7 +58,7 @@ namespace Systems
             VisualUpdate();
         }
 
-        public void VisualUpdate()
+        private void VisualUpdate()
         {
             Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
             wireRenderer.material = material;
