@@ -42,8 +42,11 @@ namespace Systems
 
     public enum PinType
     {
+        // Default
         UNDEFINED,
+        // Pin that takes in INPUTS
         INPUT,
+        // Pin that OUTPUTS
         OUTPUT
     }
 } 
