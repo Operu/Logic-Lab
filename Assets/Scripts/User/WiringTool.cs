@@ -64,27 +64,35 @@ namespace User
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
                 firstWire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
-                var positions = new List<Vector2>
-                {
-                    [0] = previewWireToCorner.GetPosition(0),
-                    [1] = previewWireToCorner.GetPosition(1)
-                };
+                List<Vector2> positions = new();
+                positions.Add(wireOriginPos);
+                positions.Add(wireOriginPos + wireCornerRelativePos);
+                
                 firstWire.Initialize(positions);
             }
 
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
                 secondWire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
-                var positions = new List<Vector2>
-                {
-                    [0] = previewWireToPos.GetPosition(0),
-                    [1] = previewWireToPos.GetPosition(1)
-                };
+                List<Vector2> positions = new();
+                positions.Add(wireOriginPos + wireCornerRelativePos);
+                positions.Add(gridMousePos);
+                
                 secondWire.Initialize(positions);
             }
+
+            if (firstWire != null)
+            {
+                AddWireConnections(firstWire);
+                SimulationManager.Instance.AddWireToSimulation(firstWire);
+            }
+
+            if (secondWire != null)
+            {
+                AddWireConnections(secondWire);
+                SimulationManager.Instance.AddWireToSimulation(secondWire);
+            }
             
-            if (firstWire != null) AddWireConnections(firstWire);
-            if (secondWire != null) AddWireConnections(secondWire);
              
             previewWireToCorner.SetPositions(new [] { Vector3.zero, Vector3.zero });
             previewWireToPos.SetPositions(new [] { Vector3.zero, Vector3.zero });
@@ -126,7 +134,6 @@ namespace User
 
             Vector3 cornerOffset = (wireCornerPos - wireOriginPos).normalized * 0.1f;
             Vector3 posOffset = ((Vector3)gridMousePos - wireCornerPos).normalized * 0.1f;
-            Debug.Log(cornerOffset);
 
             previewWireToCorner.SetPositions(new [] { wireOriginPos - cornerOffset, wireCornerPos + cornerOffset});
             previewWireToPos.SetPositions(new [] { wireCornerPos - posOffset, (Vector3)gridMousePos + posOffset});
@@ -136,16 +143,22 @@ namespace User
         {
             Vector3 stepPos = wire.startPos;
             Vector3 lineIntervalStep = (wire.endPos - wire.startPos).normalized * 0.5f;
-            while (stepPos != wire.endPos)
+            while (stepPos != wire.endPos + lineIntervalStep)
             {
                 List<WireInterface> connections = interaction.GetObjectsAtPosition(stepPos);
                 foreach (WireInterface connection in connections)
                 {
                     Wire newWire = connection as Wire;
-                    if (newWire != null)
+                    if (newWire != null && newWire != wire)
                     {
                         wire.ConnectWire(newWire);
                         newWire.ConnectWire(wire);
+                    }
+
+                    Pin newPin = connection as Pin;
+                    if (newPin != null)
+                    {
+                        newPin.ConnectWire(wire);
                     }
                 }
                 stepPos += lineIntervalStep;

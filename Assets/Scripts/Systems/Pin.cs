@@ -15,6 +15,7 @@ namespace Systems
         
         public override void ConnectWire(Wire wire)
         {
+            if (connections.Contains(wire)) return;
             connections.Add(wire);
         }
 

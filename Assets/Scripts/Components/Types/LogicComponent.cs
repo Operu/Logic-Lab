@@ -19,10 +19,5 @@ namespace Components.Types
             }
             LogicUpdate();
         }
-
-        public void Connect(Wire connection)
-        {
-            
-        }
     }
 }

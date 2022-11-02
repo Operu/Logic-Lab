@@ -304,7 +304,6 @@ MonoBehaviour:
   wirePrefab: {fileID: 1090336682560767253, guid: f81b8829947414641a3eaccef79973c0, type: 3}
   previewWireToCorner: {fileID: 43014924}
   previewWireToPos: {fileID: 1024745306}
-  wirePartPrefab: {fileID: 910832791177121197, guid: f2f5676289a7f714e895a869b290ea73, type: 3}
   interaction: {fileID: 1546744241}
 --- !u!1 &95706281
 GameObject:
@@ -931,7 +930,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   componentStorage: {fileID: 885988303}
   tps: 10
-  active: 0
+  active: 1
 --- !u!114 &1052619538
 MonoBehaviour:
   m_ObjectHideFlags: 0

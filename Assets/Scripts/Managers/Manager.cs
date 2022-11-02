@@ -8,8 +8,7 @@ namespace Managers
 
         public Material wireOff;
         public Material wireOn;
-
-        public GameObject stubPrefab;
+        
         public GameObject intersectionPrefab;
 
         private void Awake()

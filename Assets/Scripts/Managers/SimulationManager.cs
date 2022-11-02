@@ -54,21 +54,8 @@ namespace Managers
             float delay = 1 / tps;
             while (active)
             {
-                
-                // First every wire is set to off state
-                
-                // Loop should start with updating all component states.
-                // This is done with the logic update, for all logic components.
-                
-                // After that we make all output pins evaluate their state and broadcast that to their connections.
-                // every wire receiving that broadcast will evaluate their state and set internal bool "hasEvaluated" to true.
-                // If that wire is again forced to evaluate state it will realised it has already evaluated and it will stop potential wire loops.
-
-                // At last all wires will be told to update their visual state and change material.
-
                 tickNumber += 1;
-                Debug.Log("Tick: " + tickNumber);
-                
+
                 foreach (BaseComponent component in logicComponents)
                 {
                     // Update component state
@@ -77,6 +64,7 @@ namespace Managers
 
                 foreach (Wire wire in wires)
                 {
+                    // Reset all wires
                     wire.ResetState();
                 }
 
