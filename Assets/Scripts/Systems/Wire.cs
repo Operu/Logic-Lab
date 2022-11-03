@@ -17,6 +17,7 @@ namespace Systems
         public Vector3 startPos;
         public Vector3 endPos;
 
+        private bool active;
         private bool hasEvaluated;
         private LineRenderer wireLine;
         private EdgeCollider2D wireCollider;
@@ -39,6 +40,17 @@ namespace Systems
 
             Vector3 wireEdgeExtension = (endPos - startPos).normalized * 0.1f;
             wireLine.SetPositions(new Vector3[] { startPos - wireEdgeExtension, endPos + wireEdgeExtension});
+            active = true;
+        }
+
+        public void Destroy()
+        {
+            active = false;
+            foreach (Wire connection in connections)
+            {
+                connection.connections.Remove(this);
+            }
+            Destroy(gameObject);
         }
 
 
@@ -61,6 +73,7 @@ namespace Systems
 
         private void VisualUpdate()
         {
+            if (!active) return;
             Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
             wireLine.material = material;
             if (intersection != null)

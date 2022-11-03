@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using Managers;
 using Systems;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace User
+namespace User.Tools
 {
     public class WiringTool : MonoBehaviour
     {
@@ -127,14 +125,15 @@ namespace User
             while (stepPos != wire.endPos + lineIntervalStep)
             {
                 List<WireInterface> connections = interaction.GetObjectsAtPosition(stepPos);
-                List<Wire> newWires = new List<Wire>();
+                List<Wire> newWires = new();
                 foreach (WireInterface connection in connections)
                 {
                     Wire wireConnection = connection as Wire;
                     if (wireConnection != null && wireConnection != wire)
                     {
+                        // If the wire found at every step exists, and its not equal to the placed wire.
                         newWires.Add(wireConnection);
-                        if (wireConnection.startPos == stepPos || wireConnection.endPos == stepPos)
+                        if (wireConnection.startPos == stepPos || wireConnection.endPos == stepPos || wire.startPos == stepPos || wire.endPos == stepPos)
                         {
                             wire.ConnectWire(wireConnection);
                             wireConnection.ConnectWire(wire);
@@ -165,6 +164,7 @@ namespace User
             foreach (Wire newWire in otherWires)
             {
                 if (newWire.transform.childCount > 0) return false;
+                if (!originWire.connections.Contains(newWire)) return false;
             }
             
             if (otherWires.Count > 1)
