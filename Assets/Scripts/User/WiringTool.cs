@@ -17,9 +17,10 @@ namespace User
         [SerializeField] private LineRenderer previewWireToPos;
 
         [SerializeField] private ObjectInteraction interaction;
+
+        private List<Wire> hoveredWires;
         
         private bool isPlacingWire;
-
         private bool isCornerOnXAxis;
 
         private Vector3 wireOriginPos;
@@ -29,7 +30,7 @@ namespace User
         // Left mouse button event 
         public void InteractInput(InputAction.CallbackContext context)
         {
-            if (context.started) StartWirePreview();
+            if (context.started && interaction.IsHoveringObject()) StartWirePreview();
             if (context.canceled) StopWirePreview();
         }
         
@@ -42,14 +43,11 @@ namespace User
 
         private void StartWirePreview()
         {
-            if (interaction.IsHoveringObject())
-            {
-                isPlacingWire = true;
-                wireOriginPos = gridMousePos;
+            isPlacingWire = true;
+            wireOriginPos = gridMousePos;
 
-                previewWireToCorner.gameObject.SetActive(true);
-                previewWireToPos.gameObject.SetActive(true);
-            }
+            previewWireToCorner.gameObject.SetActive(true);
+            previewWireToPos.gameObject.SetActive(true);
         }
         
         private void StopWirePreview()
@@ -57,32 +55,21 @@ namespace User
             if (!isPlacingWire) return;
             isPlacingWire = false;
 
-            Wire firstWire = null;
-            Wire secondWire = null;
-            
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
-                firstWire = CreateWire(wireOriginPos, wireCornerPos);
-            }
-
-            if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
-            {
-                secondWire = CreateWire(wireCornerPos, gridMousePos);
-            }
-
-            if (firstWire != null)
-            {
+                Wire firstWire = CreateWire(wireOriginPos, wireCornerPos);
                 AddWireConnections(firstWire);
                 SimulationManager.Instance.AddWireToSimulation(firstWire);
             }
 
-            if (secondWire != null)
+            if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
+                Wire secondWire = CreateWire(wireCornerPos, gridMousePos);
                 AddWireConnections(secondWire);
                 SimulationManager.Instance.AddWireToSimulation(secondWire);
             }
-            
-             
+
+
             previewWireToCorner.SetPositions(new [] { Vector3.zero, Vector3.zero });
             previewWireToPos.SetPositions(new [] { Vector3.zero, Vector3.zero });
 
@@ -102,8 +89,6 @@ namespace User
             previewWireToCorner.SetPositions(new [] { wireOriginPos - cornerWireExtension, wireCornerPos + cornerWireExtension});
             previewWireToPos.SetPositions(new [] { wireCornerPos - positionWireExtension, gridMousePos + positionWireExtension});
         }
-        
-        
         
         private void CalculateCornerPos()
         {
@@ -142,20 +127,17 @@ namespace User
             while (stepPos != wire.endPos + lineIntervalStep)
             {
                 List<WireInterface> connections = interaction.GetObjectsAtPosition(stepPos);
+                List<Wire> newWires = new List<Wire>();
                 foreach (WireInterface connection in connections)
                 {
-                    Wire newWire = connection as Wire;
-                    if (newWire != null && newWire != wire)
+                    Wire wireConnection = connection as Wire;
+                    if (wireConnection != null && wireConnection != wire)
                     {
-                        if (newWire.startPos == stepPos || newWire.endPos == stepPos)
+                        newWires.Add(wireConnection);
+                        if (wireConnection.startPos == stepPos || wireConnection.endPos == stepPos)
                         {
-                            wire.ConnectWire(newWire);
-                            newWire.ConnectWire(wire);
-                            if (!(wire.endPos == newWire.startPos || wire.endPos == newWire.startPos))
-                            {
-                                GameObject intersection = Instantiate(Manager.Instance.intersectionPrefab, stepPos, Quaternion.identity, wire.transform);
-                                wire.intersection = intersection.GetComponent<SpriteRenderer>();
-                            }
+                            wire.ConnectWire(wireConnection);
+                            wireConnection.ConnectWire(wire);
                         }
                     }
 
@@ -165,9 +147,56 @@ namespace User
                         newPin.ConnectWire(wire);
                     }
                 }
+
+                if (ShouldPlaceIntersection(stepPos, wire, newWires))
+                {
+                    GameObject intersection = Instantiate(Manager.Instance.intersectionPrefab, stepPos, Quaternion.identity, wire.transform);
+                    wire.intersection = intersection.GetComponent<SpriteRenderer>();
+                }
+
                 stepPos += lineIntervalStep;
             }
             
         }
+
+        private bool ShouldPlaceIntersection(Vector3 position, Wire originWire, List<Wire> otherWires)
+        {
+            if (otherWires.Count < 1) return false;
+            foreach (Wire newWire in otherWires)
+            {
+                if (newWire.transform.GetChild(0) != null) return false;
+            }
+            
+            if (otherWires.Count > 1)
+            {
+                return true;
+            }
+
+            if (otherWires[0].startPos != position && otherWires[0].endPos != position)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /*private bool IsPlacingInsideSameWire()
+        {
+            List<Wire> newHoveredWires = new List<Wire>();
+            List<WireInterface> newHoveredInterfaces = interaction.GetObjectsAtPosition(gridMousePos);
+            foreach (WireInterface wireInterface in newHoveredInterfaces)
+            {
+                Wire wire = wireInterface as Wire;
+                if (wire != null) newHoveredWires.Add(wire);
+            }
+            
+            if (newHoveredWires.Any(wire => hoveredWires.Contains(wire)))
+            {
+                return true;
+            }
+            hoveredWires = newHoveredWires;
+            return false;
+
+        }*/
     }
 }

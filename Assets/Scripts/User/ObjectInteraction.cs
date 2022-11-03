@@ -8,11 +8,11 @@ namespace User
 {
     public class ObjectInteraction : MonoBehaviour
     {
-        [SerializeField] private List<GameObject> selectedObjects;
+        public List<GameObject> selectedObjects;
         public List<WireInterface> selectedWireInterfaces;
 
         private GameObject selectionCursor;
-        private Vector2 gridMousePos;
+        private Vector3 gridMousePos;
 
         private void Start()
         {   
@@ -49,7 +49,7 @@ namespace User
             selectedObjects.Clear();
             selectedWireInterfaces.Clear();
             
-            Collider2D[] objectColliders = new Collider2D[2];
+            Collider2D[] objectColliders = new Collider2D[3];
             int foundColliders = Physics2D.OverlapCircle(position, 0.1f, new ContactFilter2D().NoFilter(), objectColliders);
             if (foundColliders > 0)
             {
@@ -70,7 +70,7 @@ namespace User
         private void EnableCursor(Vector3 location)
         {
             selectionCursor.SetActive(true);
-            selectionCursor.transform.position = gridMousePos;
+            selectionCursor.transform.position = location;
         }
 
         private void DisableCursor()
