@@ -477,6 +477,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2053975090933721976, guid: 30a74ce70d9c86a4eb0ec3fc9c7aa7dd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30a74ce70d9c86a4eb0ec3fc9c7aa7dd, type: 3}
 --- !u!4 &401106878 stripped
@@ -945,7 +949,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wireOff: {fileID: 2100000, guid: 02b5750b9016cab4f9e420b772577fb7, type: 2}
   wireOn: {fileID: 2100000, guid: 9a662cc33525c6a4487bc921b85d8c33, type: 2}
-  stubPrefab: {fileID: 910832791177121197, guid: f2f5676289a7f714e895a869b290ea73, type: 3}
   intersectionPrefab: {fileID: 910832791177121197, guid: 6926e9b2a896be940a77db8aba4663bd, type: 3}
 --- !u!1 &1142717119
 GameObject:

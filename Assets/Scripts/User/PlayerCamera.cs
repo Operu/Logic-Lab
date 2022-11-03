@@ -8,9 +8,7 @@ namespace User
         public float minZoom;
         public float maxZoom;
         public float zoomAmount;
-    
-    
-    
+
         private Camera mainCam;
     
     
@@ -19,7 +17,7 @@ namespace User
             mainCam = Camera.main;
         }
 
-        void Update()
+        private void Update()
         {
             if (Input.mouseScrollDelta.y < 0)
             {

@@ -10,7 +10,7 @@ namespace Systems
 {
     public class Wire : WireInterface
     {
-        public GameObject intersection;
+        public SpriteRenderer intersection;
 
         public List<Wire> connections;
 
@@ -18,7 +18,7 @@ namespace Systems
         public Vector3 endPos;
 
         private bool hasEvaluated;
-        private LineRenderer wireRenderer;
+        private LineRenderer wireLine;
         private EdgeCollider2D wireCollider;
 
         public override void ConnectWire(Wire wire)
@@ -27,18 +27,18 @@ namespace Systems
             connections.Add(wire);
         }
         
-        public void Initialize(List<Vector2> wirePoints)
+        public void Initialize(Vector3 wireStartPos, Vector3 wireEndPos)
         {
-            wireRenderer = GetComponent<LineRenderer>();
+            wireLine = GetComponent<LineRenderer>();
             wireCollider = GetComponent<EdgeCollider2D>();
 
-            startPos = wirePoints[0];
-            endPos = wirePoints[1];
+            startPos = wireStartPos;
+            endPos = wireEndPos;
             
-            wireCollider.SetPoints(wirePoints);
+            wireCollider.SetPoints(new List<Vector2> {startPos, endPos});
 
-            Vector3 wireDirection = (endPos - startPos).normalized * 0.1f;
-            wireRenderer.SetPositions(new Vector3[] { startPos - wireDirection, endPos + wireDirection});
+            Vector3 wireEdgeExtension = (endPos - startPos).normalized * 0.1f;
+            wireLine.SetPositions(new Vector3[] { startPos - wireEdgeExtension, endPos + wireEdgeExtension});
         }
 
 
@@ -62,7 +62,11 @@ namespace Systems
         private void VisualUpdate()
         {
             Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
-            wireRenderer.material = material;
+            wireLine.material = material;
+            if (intersection != null)
+            {
+                intersection.material = material;
+            }
         }
     }
 }

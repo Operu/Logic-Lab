@@ -23,9 +23,8 @@ namespace User
         private bool isCornerOnXAxis;
 
         private Vector3 wireOriginPos;
-        private Vector3 wireCornerRelativePos;
-        private Vector3 wireDestinationRelativePos;
-        private Vector2 gridMousePos;
+        private Vector3 wireCornerPos;
+        private Vector3 gridMousePos;
         
         // Left mouse button event 
         public void InteractInput(InputAction.CallbackContext context)
@@ -63,22 +62,12 @@ namespace User
             
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
-                firstWire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
-                List<Vector2> positions = new();
-                positions.Add(wireOriginPos);
-                positions.Add(wireOriginPos + wireCornerRelativePos);
-                
-                firstWire.Initialize(positions);
+                firstWire = CreateWire(wireOriginPos, wireCornerPos);
             }
 
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
-                secondWire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
-                List<Vector2> positions = new();
-                positions.Add(wireOriginPos + wireCornerRelativePos);
-                positions.Add(gridMousePos);
-                
-                secondWire.Initialize(positions);
+                secondWire = CreateWire(wireCornerPos, gridMousePos);
             }
 
             if (firstWire != null)
@@ -103,40 +92,47 @@ namespace User
             interaction.ImmediateReUpdate();
         }
 
+        private void UpdateWirePreview()
+        {
+            CalculateCornerPos();
+
+            Vector3 cornerWireExtension = (wireCornerPos - wireOriginPos).normalized * 0.1f;
+            Vector3 positionWireExtension = (gridMousePos - wireCornerPos).normalized * 0.1f;
+
+            previewWireToCorner.SetPositions(new [] { wireOriginPos - cornerWireExtension, wireCornerPos + cornerWireExtension});
+            previewWireToPos.SetPositions(new [] { wireCornerPos - positionWireExtension, gridMousePos + positionWireExtension});
+        }
+        
+        
+        
         private void CalculateCornerPos()
         {
+            Vector3 wireDestinationRelativePos = gridMousePos - wireOriginPos;
+            
             if (isCornerOnXAxis && wireDestinationRelativePos.x == 0)
             {
-                wireCornerRelativePos = wireDestinationRelativePos;
+                wireCornerPos = gridMousePos;
                 isCornerOnXAxis = false;
                 return;
             }
 
             if (!isCornerOnXAxis && wireDestinationRelativePos.y == 0)
             {
-                wireCornerRelativePos = wireDestinationRelativePos;
+                wireCornerPos = gridMousePos;
                 isCornerOnXAxis = true;
                 return;
             }
 
-            wireCornerRelativePos = isCornerOnXAxis
-                ? new Vector3(wireDestinationRelativePos.x, 0)
-                : new Vector3(0, wireDestinationRelativePos.y);
+            wireCornerPos = isCornerOnXAxis
+                ? new Vector3(wireDestinationRelativePos.x, 0) + wireOriginPos
+                : new Vector3(0, wireDestinationRelativePos.y) + wireOriginPos;
         }
-        
 
-        private void UpdateWirePreview()
+        private Wire CreateWire(Vector3 startPos, Vector3 endPos)
         {
-            wireDestinationRelativePos = (Vector3)gridMousePos - wireOriginPos;
-            CalculateCornerPos();
-
-            Vector3 wireCornerPos = wireOriginPos + wireCornerRelativePos;
-
-            Vector3 cornerOffset = (wireCornerPos - wireOriginPos).normalized * 0.1f;
-            Vector3 posOffset = ((Vector3)gridMousePos - wireCornerPos).normalized * 0.1f;
-
-            previewWireToCorner.SetPositions(new [] { wireOriginPos - cornerOffset, wireCornerPos + cornerOffset});
-            previewWireToPos.SetPositions(new [] { wireCornerPos - posOffset, (Vector3)gridMousePos + posOffset});
+            Wire wire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
+            wire.Initialize(startPos, endPos);
+            return wire;
         }
 
         private void AddWireConnections(Wire wire)
@@ -151,8 +147,16 @@ namespace User
                     Wire newWire = connection as Wire;
                     if (newWire != null && newWire != wire)
                     {
-                        wire.ConnectWire(newWire);
-                        newWire.ConnectWire(wire);
+                        if (newWire.startPos == stepPos || newWire.endPos == stepPos)
+                        {
+                            wire.ConnectWire(newWire);
+                            newWire.ConnectWire(wire);
+                            if (!(wire.endPos == newWire.startPos || wire.endPos == newWire.startPos))
+                            {
+                                GameObject intersection = Instantiate(Manager.Instance.intersectionPrefab, stepPos, Quaternion.identity, wire.transform);
+                                wire.intersection = intersection.GetComponent<SpriteRenderer>();
+                            }
+                        }
                     }
 
                     Pin newPin = connection as Pin;
