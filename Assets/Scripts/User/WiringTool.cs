@@ -164,7 +164,7 @@ namespace User
             if (otherWires.Count < 1) return false;
             foreach (Wire newWire in otherWires)
             {
-                if (newWire.transform.GetChild(0) != null) return false;
+                if (newWire.transform.childCount > 0) return false;
             }
             
             if (otherWires.Count > 1)
