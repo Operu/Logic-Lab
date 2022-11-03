@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Components;
 using Components.Types;
@@ -10,7 +11,7 @@ namespace Systems
 {
     public class Wire : WireInterface
     {
-        public SpriteRenderer intersection;
+        public List<SpriteRenderer> intersections;
 
         public List<Wire> connections;
 
@@ -76,9 +77,9 @@ namespace Systems
             if (!active) return;
             Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
             wireLine.material = material;
-            if (intersection != null)
+            if (intersections.Any())
             {
-                intersection.material = material;
+                intersections.ForEach(intersection => intersection.material = material);
             }
         }
     }

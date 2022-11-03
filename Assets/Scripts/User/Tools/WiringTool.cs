@@ -150,7 +150,7 @@ namespace User.Tools
                 if (ShouldPlaceIntersection(stepPos, wire, newWires))
                 {
                     GameObject intersection = Instantiate(Manager.Instance.intersectionPrefab, stepPos, Quaternion.identity, wire.transform);
-                    wire.intersection = intersection.GetComponent<SpriteRenderer>();
+                    wire.intersections.Add(intersection.GetComponent<SpriteRenderer>());
                 }
 
                 stepPos += lineIntervalStep;
