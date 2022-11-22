@@ -4,13 +4,13 @@ using Components;
 using Components.Types;
 using Systems;
 using UnityEngine;
+using Utilities;
 
 namespace Managers
 {
-    public class SimulationManager : MonoBehaviour
+    public class SimulationManager : Singleton<SimulationManager>
     {
-        public static SimulationManager Instance { get; private set; }
-        
+
         public Transform componentStorage;
         
         public float tps = 0.5f;
@@ -23,18 +23,6 @@ namespace Managers
         private List<Pin> outputPins;
         private List<Wire> wires;
 
-        private void Awake()
-        {
-            if (Instance != null && Instance != this) 
-            { 
-                Destroy(this); 
-            } 
-            else 
-            { 
-                Instance = this; 
-            } 
-        }
-    
         private void Start()
         {
             logicComponents = new List<BaseComponent>();
