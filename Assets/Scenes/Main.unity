@@ -320,7 +320,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &95706282
 Transform:
   m_ObjectHideFlags: 0
@@ -1359,6 +1359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae285d200f1471da6b94fcca8740d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wiringTool: {fileID: 94805849}
   interaction: {fileID: 1546744241}
 --- !u!1001 &1489150923
 PrefabInstance:
@@ -1618,7 +1619,19 @@ MonoBehaviour:
     m_ActionId: 327f7f43-5ee6-477c-928e-ab01736b8fe8
     m_ActionName: Player/Interact[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 519420033}
+        m_TargetAssemblyTypeName: User.PlayerCamera, Assembly-CSharp
+        m_MethodName: MoveInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 41fa2668-cb17-4b6b-8ef8-557a5aac70c4
     m_ActionName: Player/Camera Pan[/Mouse/rightButton]
   - m_PersistentCalls:

@@ -1,5 +1,5 @@
 {
-    "name": "PlacerInputActions",
+    "name": "PlayerInputActions",
     "maps": [
         {
             "name": "Player",
@@ -16,7 +16,7 @@
                 },
                 {
                     "name": "Camera Movement",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "41fa2668-cb17-4b6b-8ef8-557a5aac70c4",
                     "expectedControlType": "Vector2",
                     "processors": "",

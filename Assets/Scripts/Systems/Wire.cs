@@ -44,6 +44,15 @@ namespace Systems
             active = true;
         }
 
+        public void SoftDestroy()
+        {
+            foreach(Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
+            connections.Clear();
+        }
+        
         public void Destroy()
         {
             active = false;

@@ -9,6 +9,7 @@ namespace User
     {
 
         public float moveSpeed;
+        private Vector3 movement;
         
         public float minZoom;
         public float maxZoom;
@@ -31,6 +32,7 @@ namespace User
 
         private void Update()
         {
+            transform.position += movement * Time.deltaTime;
             if (Input.mouseScrollDelta.y < 0)
             {
                 mainCam.orthographicSize = Mathf.Clamp(mainCam.orthographicSize + zoomAmount, minZoom, maxZoom);
@@ -40,15 +42,10 @@ namespace User
             {
                 mainCam.orthographicSize = Mathf.Clamp(mainCam.orthographicSize - zoomAmount, minZoom, maxZoom);
             }
-
-            float inputX = Input.GetAxis("Horizontal");
-            float inputY = Input.GetAxis("Vertical");
-            Vector3 movement = new Vector3(inputX, inputY).normalized * (moveSpeed * Time.deltaTime);
-            transform.Translate(movement);
         }
 
         private IEnumerator UpdateBackgroundPosition()
-        {
+        { 
             while (isBackgroundMovementActive)
             {
                 yield return new WaitForSeconds(updateCooldown);
@@ -63,6 +60,7 @@ namespace User
 
         public void MoveInput(InputAction.CallbackContext context)
         {
+            movement = (Vector3)context.ReadValue<Vector2>() * moveSpeed;
         }
     }
 }

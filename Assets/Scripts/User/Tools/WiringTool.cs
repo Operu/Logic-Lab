@@ -118,7 +118,7 @@ namespace User.Tools
             return wire;
         }
 
-        private void AddWireConnections(Wire wire)
+        public void AddWireConnections(Wire wire)
         {
             Vector3 stepPos = wire.startPos;
             Vector3 lineIntervalStep = (wire.endPos - wire.startPos).normalized * 0.5f;
@@ -146,24 +146,26 @@ namespace User.Tools
                         newPin.ConnectWire(wire);
                     }
                 }
-
-                if (ShouldPlaceIntersection(stepPos, wire, newWires))
-                {
-                    GameObject intersection = Instantiate(Manager.Instance.intersectionPrefab, stepPos, Quaternion.identity, wire.transform);
-                    wire.intersections.Add(intersection.GetComponent<SpriteRenderer>());
-                }
-
+                TryPlaceIntersection(stepPos, wire, newWires);
                 stepPos += lineIntervalStep;
             }
             
         }
 
+        private void TryPlaceIntersection(Vector3 position, Wire originWire, List<Wire> otherWires)
+        {
+            if (ShouldPlaceIntersection(position, originWire, otherWires))
+            {
+                GameObject intersection = Instantiate(Manager.Instance.intersectionPrefab, position, Quaternion.identity, originWire.transform);
+                originWire.intersections.Add(intersection.GetComponent<SpriteRenderer>());
+            }
+        }
+        
         private bool ShouldPlaceIntersection(Vector3 position, Wire originWire, List<Wire> otherWires)
         {
             if (otherWires.Count < 1) return false;
             foreach (Wire newWire in otherWires)
             {
-                if (newWire.transform.childCount > 0) return false;
                 if (!originWire.connections.Contains(newWire)) return false;
             }
             
@@ -176,7 +178,6 @@ namespace User.Tools
             {
                 return true;
             }
-
             return false;
         }
 

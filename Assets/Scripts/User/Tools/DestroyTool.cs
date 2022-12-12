@@ -7,6 +7,7 @@ namespace User.Tools
 {
     public class DestroyTool : MonoBehaviour
     {
+        [SerializeField] private WiringTool wiringTool;
         [SerializeField] private ObjectInteraction interaction;
         
         public void DestroyInput(InputAction.CallbackContext context)
@@ -21,8 +22,16 @@ namespace User.Tools
                 Wire wire = wireInterface as Wire;
                 if (wire)
                 {
+                    List<Wire> connections = wire.connections;
                     wire.Destroy();
                     interaction.ImmediateReUpdate();
+
+                    foreach (Wire connection in connections)
+                    {
+                        connection.SoftDestroy();
+                        wiringTool.AddWireConnections(connection);
+                    }
+                    
                     return;
                 }
             }
