@@ -44,52 +44,63 @@ namespace Systems
             active = true;
         }
 
+        public void Destroy()
+        {
+            active = false;
+            RemoveConnections();
+            Destroy(gameObject);
+        }
+        
         public void SoftDestroy()
         {
             foreach(Transform child in transform)
             {
                 Destroy(child.gameObject);
             }
-            connections.Clear();
+            Debug.Log("Soft destroying on wire");
+            RemoveConnections();
         }
-        
-        public void Destroy()
+
+        public void RemoveConnections()
         {
-            active = false;
             foreach (Wire connection in connections)
             {
                 connection.connections.Remove(this);
             }
-            Destroy(gameObject);
+            connections.Clear();
         }
 
 
-        public void ActivateState()
-        {
-            if (State) return;
-            State = true;
-            foreach (Wire wire in connections)
+        #region Logic
+
+            public void ActivateState()
             {
-                wire.ActivateState();
+                if (State) return;
+                State = true;
+                foreach (Wire wire in connections)
+                {
+                    wire.ActivateState();
+                }
+                VisualUpdate();
             }
-            VisualUpdate();
-        }
 
-        public void ResetState() 
-        {
-            State = false;
-            VisualUpdate();
-        }
-
-        private void VisualUpdate()
-        {
-            if (!active) return;
-            Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
-            wireLine.material = material;
-            if (intersections.Any())
+            public void ResetState() 
             {
-                intersections.ForEach(intersection => intersection.material = material);
+                State = false;
+                VisualUpdate();
             }
-        }
+
+            private void VisualUpdate()
+            {
+                if (!active) return;
+                Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
+                wireLine.material = material;
+                if (intersections.Any())
+                {
+                    intersections.ForEach(intersection => intersection.material = material);
+                }
+            }
+
+        #endregion
     }
 }
