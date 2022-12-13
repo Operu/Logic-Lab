@@ -61,6 +61,11 @@ namespace Systems
             RemoveConnections();
         }
 
+        public void Disable()
+        {
+            wireCollider.enabled = false;
+        }
+        
         public void RemoveConnections()
         {
             foreach (Wire connection in connections)
@@ -73,33 +78,36 @@ namespace Systems
 
         #region Logic
 
-            public void ActivateState()
+        public void ActivateState()
+        {
+            if (State) return;
+            State = true;
+            foreach (Wire wire in connections)
             {
-                if (State) return;
-                State = true;
-                foreach (Wire wire in connections)
-                {
-                    wire.ActivateState();
-                }
-                VisualUpdate();
+                wire.ActivateState();
             }
+            VisualUpdate();
+        }
 
-            public void ResetState() 
-            {
-                State = false;
-                VisualUpdate();
-            }
+        public void ResetState() 
+        {
+            State = false;
+            VisualUpdate();
+        }
 
-            private void VisualUpdate()
+        private void VisualUpdate()
+        {
+            if (!active) return;
+            Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
+            wireLine.material = material;
+            foreach (SpriteRenderer intersection in intersections)
             {
-                if (!active) return;
-                Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
-                wireLine.material = material;
-                if (intersections.Any())
+                if (intersection != null)
                 {
-                    intersections.ForEach(intersection => intersection.material = material);
+                    intersection.material = material;
                 }
             }
+        }
 
         #endregion
     }

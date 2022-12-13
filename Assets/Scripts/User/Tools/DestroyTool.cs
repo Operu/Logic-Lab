@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,17 +23,18 @@ namespace User.Tools
                 Wire wire = wireInterface as Wire;
                 if (wire)
                 {
-                    List<Wire> connections = wire.connections;
-                    wire.Destroy();
-                    interaction.ImmediateReUpdate();
-
+                    List<Wire> connections = wire.connections.ToList();
+                    wire.Disable();
+                    
                     foreach (Wire connection in connections)
                     {
                         Debug.Log("looped");
                         connection.SoftDestroy();
                         wiringTool.AddWireConnections(connection);
                     }
-                    
+                    wire.Destroy();
+                    interaction.ImmediateReUpdate();
+
                     return;
                 }
             }
