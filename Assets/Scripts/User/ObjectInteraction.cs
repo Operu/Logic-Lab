@@ -67,6 +67,23 @@ namespace User
             return selectedWireInterfaces;
         }
 
+        public List<Wire> GetWiresOnEdge(Vector2 aPos, Vector2 bPos)
+        {
+            Vector2 realPos = Vector2.Lerp(aPos, bPos, 0.5f);
+            return GetWiresOnPosition(realPos);
+        }
+        
+        public List<Wire> GetWiresOnPosition(Vector2 position)
+        {
+            List<WireInterface> connections = GetObjectsAtPosition(position);
+            List<Wire> returnWires = new();
+            foreach (WireInterface connection in connections)
+            {
+                returnWires.Add(connection as Wire);
+            }
+            return returnWires;
+        }
+
         private void EnableCursor(Vector3 location)
         {
             selectionCursor.SetActive(true);

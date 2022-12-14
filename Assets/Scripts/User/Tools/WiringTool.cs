@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using Managers;
 using Systems;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -55,16 +58,24 @@ namespace User.Tools
 
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
-                Wire firstWire = CreateWire(wireOriginPos, wireCornerPos);
-                AddWireConnections(firstWire);
-                SimulationManager.Instance.AddWireToSimulation(firstWire);
+                Debug.Log("Trying to create wire to corner");
+                List<Wire> firstWireSet = TryCreateWires(wireOriginPos, wireCornerPos);
+                foreach (Wire wire in firstWireSet)
+                {
+                    AddWireConnections(wire);
+                    SimulationManager.Instance.AddWireToSimulation(wire);
+                }
             }
 
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
-                Wire secondWire = CreateWire(wireCornerPos, gridMousePos);
-                AddWireConnections(secondWire);
-                SimulationManager.Instance.AddWireToSimulation(secondWire);
+                Debug.Log("Trying to create wire to pos");
+                List<Wire> secondWireSet = TryCreateWires(wireCornerPos, gridMousePos);
+                foreach (Wire wire in secondWireSet)
+                {
+                    AddWireConnections(wire);
+                    SimulationManager.Instance.AddWireToSimulation(wire);
+                }
             }
 
 
@@ -111,6 +122,59 @@ namespace User.Tools
                 : new Vector3(0, wireDestinationRelativePos.y) + wireOriginPos;
         }
 
+        private List<Wire> TryCreateWires(Vector3 startPos, Vector3 endPos)
+        {
+            List<Wire> createdWires = new();
+
+            List<bool> wiredOccupiedList = new();
+
+            Vector3 stepPos = startPos;
+            Vector3 lineIntervalStep = (endPos - startPos).normalized * 0.5f;
+
+            while (stepPos != endPos)
+            {
+                List<Wire> leftEdgeWires = interaction.GetWiresOnPosition(stepPos);
+                List<Wire> rightEdgeWires = interaction.GetWiresOnPosition(stepPos + lineIntervalStep);
+
+                bool found = false;
+                foreach (Wire leftWirePart in leftEdgeWires)
+                {
+                    if (rightEdgeWires.Contains(leftWirePart)) found = true;
+                }
+                Debug.Log(found);
+                wiredOccupiedList.Add(found);
+                stepPos += lineIntervalStep;
+            }
+
+            int index = 0;
+            bool isCreatingWire = false;
+            Vector3 currentStart = startPos;
+            
+            foreach (bool isOccupied in wiredOccupiedList)
+            {
+                if (!isOccupied && !isCreatingWire)
+                {
+                    isCreatingWire = true;
+                    currentStart = lineIntervalStep * index + startPos;
+                    Debug.Log(currentStart);
+                }
+
+                if (isCreatingWire && isOccupied)
+                {
+                    createdWires.Add(CreateWire(currentStart, lineIntervalStep * index + startPos));
+                    isCreatingWire = false;
+                }   
+                index++;
+            }
+
+            if (isCreatingWire && !wiredOccupiedList.Last())
+            {
+                createdWires.Add(CreateWire(currentStart, endPos));
+            }
+            
+            return createdWires;
+        }
+        
         private Wire CreateWire(Vector3 startPos, Vector3 endPos)
         {
             Wire wire = Instantiate(wirePrefab, wireStorage).GetComponent<Wire>();
@@ -122,6 +186,7 @@ namespace User.Tools
         {
             Vector3 stepPos = wire.startPos;
             Vector3 lineIntervalStep = (wire.endPos - wire.startPos).normalized * 0.5f;
+
             while (stepPos != wire.endPos + lineIntervalStep)
             {
                 List<WireInterface> connections = interaction.GetObjectsAtPosition(stepPos);
@@ -164,12 +229,15 @@ namespace User.Tools
         private bool ShouldPlaceIntersection(Vector3 position, Wire originWire, List<Wire> otherWires)
         {
             if (otherWires.Count < 1) return false;
+            if (otherWires.Count > 1) return true;
+
+            // Is the subject wire connected to the other wires at the stepPos?
             foreach (Wire newWire in otherWires)
             {
                 if (!originWire.connections.Contains(newWire)) return false;
             }
-            
-            if (otherWires.Count > 1)
+
+            if (originWire.startPos != position && originWire.endPos != position)
             {
                 return true;
             }
@@ -178,26 +246,8 @@ namespace User.Tools
             {
                 return true;
             }
+
             return false;
         }
-
-        /*private bool IsPlacingInsideSameWire()
-        {
-            List<Wire> newHoveredWires = new List<Wire>();
-            List<WireInterface> newHoveredInterfaces = interaction.GetObjectsAtPosition(gridMousePos);
-            foreach (WireInterface wireInterface in newHoveredInterfaces)
-            {
-                Wire wire = wireInterface as Wire;
-                if (wire != null) newHoveredWires.Add(wire);
-            }
-            
-            if (newHoveredWires.Any(wire => hoveredWires.Contains(wire)))
-            {
-                return true;
-            }
-            hoveredWires = newHoveredWires;
-            return false;
-
-        }*/
     }
 }

@@ -28,7 +28,6 @@ namespace User.Tools
                     
                     foreach (Wire connection in connections)
                     {
-                        Debug.Log("looped");
                         connection.SoftDestroy();
                         wiringTool.AddWireConnections(connection);
                     }
