@@ -17,7 +17,6 @@ namespace Managers
         
         public Material wireOff;
         public Material wireOn;
-        public GameObject intersectionPrefab;
 
         private int tickNumber;
 

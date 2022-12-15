@@ -6,7 +6,7 @@ namespace Player
 {
     [System.Serializable] public class MousePosChangedEvent : UnityEvent<Vector2> { }
     
-    public class UserMouse : MonoBehaviour
+    public class PlayerMouse : MonoBehaviour
     {
         public MousePosChangedEvent mousePosChangedEvent;
 

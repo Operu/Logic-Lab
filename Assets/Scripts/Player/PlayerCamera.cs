@@ -29,6 +29,11 @@ namespace Player
             mainCam = Camera.main;
             StartCoroutine(UpdateBackgroundPosition());
         }
+        
+        public void MoveInput(InputAction.CallbackContext context)
+        {
+            movement = (Vector3)context.ReadValue<Vector2>() * moveSpeed;
+        }
 
         private void Update()
         {
@@ -56,11 +61,6 @@ namespace Player
                     background.position = roundedPos + Vector3.forward;
                 }
             }
-        }
-
-        public void MoveInput(InputAction.CallbackContext context)
-        {
-            movement = (Vector3)context.ReadValue<Vector2>() * moveSpeed;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Player.Tools
     {
         [SerializeField] private Transform wireStorage;
         [SerializeField] private GameObject wirePrefab;
+        [SerializeField] private GameObject intersectionPrefab;
         
         [SerializeField] private LineRenderer previewWireToCorner;
         [SerializeField] private LineRenderer previewWireToPos;
@@ -216,7 +217,7 @@ namespace Player.Tools
         {
             if (ShouldPlaceIntersection(position, originWire, otherWires))
             {
-                GameObject intersection = Instantiate(SimulationManager.Instance.intersectionPrefab, position, Quaternion.identity, originWire.transform);
+                GameObject intersection = Instantiate(intersectionPrefab, position, Quaternion.identity, originWire.transform);
                 originWire.intersections.Add(intersection.GetComponent<SpriteRenderer>());
             }
         }
