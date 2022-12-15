@@ -12,10 +12,12 @@ namespace Managers
     {
 
         public Transform componentStorage;
-        
         public float tps = 0.5f;
-
         public bool active = true;
+        
+        public Material wireOff;
+        public Material wireOn;
+        public GameObject intersectionPrefab;
 
         private int tickNumber;
 

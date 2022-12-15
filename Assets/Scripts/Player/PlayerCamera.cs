@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Utilities;
 
-namespace User
+namespace Player
 {
     public class PlayerCamera : MonoBehaviour
     {
@@ -49,7 +49,7 @@ namespace User
             while (isBackgroundMovementActive)
             {
                 yield return new WaitForSeconds(updateCooldown);
-                Vector3 roundedPos = Utility.RoundVector2(mainCam.transform.position);
+                Vector3 roundedPos = Helpers.RoundVector2(mainCam.transform.position);
                 if (roundedPos != lastPos)
                 {
                     lastPos = roundedPos;

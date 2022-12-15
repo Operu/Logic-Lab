@@ -2,7 +2,7 @@
 
 namespace Utilities
 {
-    public static class Utility
+    public static class Helpers
     {
         private static Camera mainCamera;
 
@@ -40,5 +40,12 @@ namespace Utilities
         {
             return PreciseRoundVector2(MouseWorldPos());
         }
+
+
+        public static void DestroyChildren(this Transform transform)
+        {
+            foreach (Transform child in transform) Object.Destroy(child);
+        }
+        
     }
 }

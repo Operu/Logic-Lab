@@ -1,10 +1,8 @@
-﻿using System;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using Utilities;
 
-namespace User
+namespace Player
 {
     [System.Serializable] public class MousePosChangedEvent : UnityEvent<Vector2> { }
     
@@ -26,7 +24,7 @@ namespace User
 
         private void MousePositionChanged()
         {
-            Vector2 currentPos = Utility.PreciseGridMousePos();
+            Vector2 currentPos = Helpers.PreciseGridMousePos();
             if (gridMousePos != currentPos)
             {
                 gridMousePos = currentPos;

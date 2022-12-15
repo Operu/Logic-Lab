@@ -4,12 +4,12 @@ using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace User.Tools
+namespace Player.Tools
 {
     public class DestroyTool : MonoBehaviour
     {
         [SerializeField] private WiringTool wiringTool;
-        [SerializeField] private ObjectInteraction interaction;
+        [SerializeField] private PlayerInteraction interaction;
         
         public void DestroyInput(InputAction.CallbackContext context)
         {

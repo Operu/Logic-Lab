@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Systems;
 using UnityEngine;
 
-namespace User
+namespace Player
 {
-    public class ObjectInteraction : MonoBehaviour
+    public class PlayerInteraction : MonoBehaviour
     {
         public List<GameObject> selectedObjects;
         public List<WireInterface> selectedWireInterfaces;

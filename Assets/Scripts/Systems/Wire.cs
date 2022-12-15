@@ -6,6 +6,7 @@ using Components.Types;
 using Managers;
 using Unity.VisualScripting;
 using UnityEngine;
+using Utilities;
 
 namespace Systems
 {
@@ -53,11 +54,7 @@ namespace Systems
         
         public void SoftDestroy()
         {
-            foreach(Transform child in transform)
-            {
-                Destroy(child.gameObject);
-            }
-            Debug.Log("Soft destroying on wire");
+            transform.DestroyChildren();
             RemoveConnections();
         }
 
@@ -98,7 +95,7 @@ namespace Systems
         private void VisualUpdate()
         {
             if (!active) return;
-            Material material = State ? Manager.Instance.wireOn : Manager.Instance.wireOff;
+            Material material = State ? SimulationManager.Instance.wireOn : SimulationManager.Instance.wireOff;
             wireLine.material = material;
             foreach (SpriteRenderer intersection in intersections)
             {

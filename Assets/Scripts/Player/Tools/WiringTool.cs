@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using Managers;
 using Systems;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace User.Tools
+namespace Player.Tools
 {
     public class WiringTool : MonoBehaviour
     {
@@ -17,7 +15,7 @@ namespace User.Tools
         [SerializeField] private LineRenderer previewWireToCorner;
         [SerializeField] private LineRenderer previewWireToPos;
 
-        [SerializeField] private ObjectInteraction interaction;
+        [SerializeField] private PlayerInteraction interaction;
 
         private List<Wire> hoveredWires;
         
@@ -58,7 +56,6 @@ namespace User.Tools
 
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
-                Debug.Log("Trying to create wire to corner");
                 List<Wire> firstWireSet = TryCreateWires(wireOriginPos, wireCornerPos);
                 foreach (Wire wire in firstWireSet)
                 {
@@ -69,7 +66,6 @@ namespace User.Tools
 
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
-                Debug.Log("Trying to create wire to pos");
                 List<Wire> secondWireSet = TryCreateWires(wireCornerPos, gridMousePos);
                 foreach (Wire wire in secondWireSet)
                 {
@@ -141,7 +137,6 @@ namespace User.Tools
                 {
                     if (rightEdgeWires.Contains(leftWirePart)) found = true;
                 }
-                Debug.Log(found);
                 wiredOccupiedList.Add(found);
                 stepPos += lineIntervalStep;
             }
@@ -221,7 +216,7 @@ namespace User.Tools
         {
             if (ShouldPlaceIntersection(position, originWire, otherWires))
             {
-                GameObject intersection = Instantiate(Manager.Instance.intersectionPrefab, position, Quaternion.identity, originWire.transform);
+                GameObject intersection = Instantiate(SimulationManager.Instance.intersectionPrefab, position, Quaternion.identity, originWire.transform);
                 originWire.intersections.Add(intersection.GetComponent<SpriteRenderer>());
             }
         }
