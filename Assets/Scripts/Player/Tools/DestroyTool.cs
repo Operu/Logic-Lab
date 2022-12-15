@@ -8,8 +8,9 @@ namespace Player.Tools
 {
     public class DestroyTool : MonoBehaviour
     {
+        [Header("Extern References")]
         [SerializeField] private WiringTool wiringTool;
-        [SerializeField] private PlayerInteraction interaction;
+        [SerializeField] private PlayerSelection selection;
         
         public void DestroyInput(InputAction.CallbackContext context)
         {
@@ -18,7 +19,7 @@ namespace Player.Tools
 
         private void DestroyObjects()
         {
-            foreach (WireInterface wireInterface in interaction.selectedWireInterfaces)
+            foreach (WireInterface wireInterface in selection.selectedWireInterfaces)
             {
                 Wire wire = wireInterface as Wire;
                 if (wire)
@@ -32,7 +33,7 @@ namespace Player.Tools
                         wiringTool.AddWireConnections(connection);
                     }
                     wire.Destroy();
-                    interaction.ImmediateReUpdate();
+                    selection.ImmediateReUpdate();
 
                     return;
                 }

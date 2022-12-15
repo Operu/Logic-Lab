@@ -95,7 +95,7 @@ namespace Systems
         private void VisualUpdate()
         {
             if (!active) return;
-            Material material = State ? SimulationManager.Instance.wireOn : SimulationManager.Instance.wireOff;
+            Material material = State ? SimulationManager.Instance.wireOnMaterial : SimulationManager.Instance.wireOffMaterial;
             wireLine.material = material;
             foreach (SpriteRenderer intersection in intersections)
             {

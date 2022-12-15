@@ -305,7 +305,7 @@ MonoBehaviour:
   intersectionPrefab: {fileID: 910832791177121197, guid: 6926e9b2a896be940a77db8aba4663bd, type: 3}
   previewWireToCorner: {fileID: 43014924}
   previewWireToPos: {fileID: 1024745306}
-  interaction: {fileID: 1546744241}
+  selection: {fileID: 1546744241}
 --- !u!1 &95706281
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,11 +1002,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da57aa1f536498443b8c296ba18f91f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentStorage: {fileID: 885988303}
   tps: 10
   active: 1
-  wireOff: {fileID: 2100000, guid: 02b5750b9016cab4f9e420b772577fb7, type: 2}
-  wireOn: {fileID: 2100000, guid: 9a662cc33525c6a4487bc921b85d8c33, type: 2}
+  componentStorage: {fileID: 885988303}
+  wireOffMaterial: {fileID: 2100000, guid: 02b5750b9016cab4f9e420b772577fb7, type: 2}
+  wireOnMaterial: {fileID: 2100000, guid: 9a662cc33525c6a4487bc921b85d8c33, type: 2}
 --- !u!114 &1052619538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1427,7 +1427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wiringTool: {fileID: 94805849}
-  interaction: {fileID: 1546744241}
+  selection: {fileID: 1546744241}
 --- !u!1001 &1489150923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1510,7 +1510,7 @@ GameObject:
   - component: {fileID: 1546744240}
   - component: {fileID: 1546744241}
   m_Layer: 0
-  m_Name: Player Interaction
+  m_Name: Player Selection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1617,7 +1617,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1815026830}
-  - component: {fileID: 1815026832}
   - component: {fileID: 1815026831}
   m_Layer: 0
   m_Name: Player
@@ -1731,18 +1730,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1815026832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815026829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8251dba3337c4ff38439038eb32dd3f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1972498154
 GameObject:
   m_ObjectHideFlags: 0
@@ -1790,11 +1777,30 @@ MonoBehaviour:
   mousePosChangedEvent:
     m_PersistentCalls:
       m_Calls:
-      - {m_Target: {fileID: 1546744241}, m_TargetAssemblyTypeName: User.ObjectInteraction, Assembly-CSharp, m_MethodName: UpdateMousePos, m_Mode: 0, m_Arguments: {m_ObjectArgument: {fileID: 0}, m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, m_IntArgument: 0, m_FloatArgument: 0, m_StringArgument: , m_BoolArgument: 0}, m_CallState: 2}
-      - {m_Target: {fileID: 94805849}, m_TargetAssemblyTypeName: User.WiringTool, Assembly-CSharp, m_MethodName: UpdateMousePosEvent, m_Mode: 0, m_Arguments: {m_ObjectArgument: {fileID: 0}, m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, m_IntArgument: 0, m_FloatArgument: 0, m_StringArgument: , m_BoolArgument: 0}, m_CallState: 2}
-    m_CallsDirty: 1
-  gridMousePos: {x: 0, y: 0}
-  lastMousePos: {x: 0, y: 0, z: 0}
+      - m_Target: {fileID: 1546744241}
+        m_TargetAssemblyTypeName: User.ObjectInteraction, Assembly-CSharp
+        m_MethodName: UpdateMousePos
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 94805849}
+        m_TargetAssemblyTypeName: User.WiringTool, Assembly-CSharp
+        m_MethodName: UpdateMousePosEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &6571765539266487424
 PrefabInstance:
   m_ObjectHideFlags: 0

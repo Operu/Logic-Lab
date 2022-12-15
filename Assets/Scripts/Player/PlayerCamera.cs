@@ -7,19 +7,22 @@ namespace Player
 {
     public class PlayerCamera : MonoBehaviour
     {
-
+        [Header("Movement")]
         public float moveSpeed;
-        private Vector3 movement;
-        
+
+        [Header("Camera Zoom")]
         public float minZoom;
         public float maxZoom;
         public float zoomAmount;
 
+        [Header("Background")]
         [SerializeField] private Transform background;
         public float updateCooldown;
         public bool isBackgroundMovementActive;
 
-        private Vector3 lastPos;
+        
+        private Vector3 movement;
+        private Vector3 lastBackgroundPos;
 
         private Camera mainCam;
     
@@ -55,9 +58,9 @@ namespace Player
             {
                 yield return new WaitForSeconds(updateCooldown);
                 Vector3 roundedPos = Helpers.RoundVector2(mainCam.transform.position);
-                if (roundedPos != lastPos)
+                if (roundedPos != lastBackgroundPos)
                 {
-                    lastPos = roundedPos;
+                    lastBackgroundPos = roundedPos;
                     background.position = roundedPos + Vector3.forward;
                 }
             }

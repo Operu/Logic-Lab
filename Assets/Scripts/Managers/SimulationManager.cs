@@ -10,16 +10,17 @@ namespace Managers
 {
     public class SimulationManager : Singleton<SimulationManager>
     {
-
-        public Transform componentStorage;
-        public float tps = 0.5f;
+        
+        [Header("Simulation")]
+        public float tps = 10f;
         public bool active = true;
         
-        public Material wireOff;
-        public Material wireOn;
+        [Header("Extern References")]
+        public Transform componentStorage;
+        public Material wireOffMaterial;
+        public Material wireOnMaterial;
 
-        private int tickNumber;
-
+        
         private List<BaseComponent> logicComponents;
         private List<Pin> outputPins;
         private List<Wire> wires;
@@ -43,8 +44,6 @@ namespace Managers
             float delay = 1 / tps;
             while (active)
             {
-                tickNumber += 1;
-
                 foreach (BaseComponent component in logicComponents)
                 {
                     // Update component state
@@ -90,6 +89,5 @@ namespace Managers
             }
             return false;
         }
-        
     }
 }

@@ -9,14 +9,15 @@ namespace Player.Tools
 {
     public class WiringTool : MonoBehaviour
     {
-        [SerializeField] private Transform wireStorage;
+        [Header("Prefabs")]
         [SerializeField] private GameObject wirePrefab;
         [SerializeField] private GameObject intersectionPrefab;
         
+        [Header("Extern References")]
+        [SerializeField] private PlayerSelection selection;
+        [SerializeField] private Transform wireStorage;
         [SerializeField] private LineRenderer previewWireToCorner;
         [SerializeField] private LineRenderer previewWireToPos;
-
-        [SerializeField] private PlayerInteraction interaction;
 
         private List<Wire> hoveredWires;
         
@@ -30,7 +31,7 @@ namespace Player.Tools
         // Left mouse button event 
         public void InteractInput(InputAction.CallbackContext context)
         {
-            if (context.started && interaction.IsHoveringObject()) StartWirePreview();
+            if (context.started && selection.IsHoveringObject()) StartWirePreview();
             if (context.canceled) StopWirePreview();
         }
         
@@ -48,6 +49,8 @@ namespace Player.Tools
 
             previewWireToCorner.gameObject.SetActive(true);
             previewWireToPos.gameObject.SetActive(true);
+            
+            selection.CursorHoldToggle();
         }
         
         private void StopWirePreview()
@@ -82,7 +85,8 @@ namespace Player.Tools
             previewWireToCorner.gameObject.SetActive(false);
             previewWireToPos.gameObject.SetActive(false); 
             
-            interaction.ImmediateReUpdate();
+            selection.CursorHoldToggle();
+            selection.ImmediateReUpdate();
         }
 
         private void UpdateWirePreview()
@@ -130,8 +134,8 @@ namespace Player.Tools
 
             while (stepPos != endPos)
             {
-                List<Wire> leftEdgeWires = interaction.GetWiresOnPosition(stepPos);
-                List<Wire> rightEdgeWires = interaction.GetWiresOnPosition(stepPos + lineIntervalStep);
+                List<Wire> leftEdgeWires = selection.GetWiresOnPosition(stepPos);
+                List<Wire> rightEdgeWires = selection.GetWiresOnPosition(stepPos + lineIntervalStep);
 
                 bool found = false;
                 foreach (Wire leftWirePart in leftEdgeWires)
@@ -152,7 +156,6 @@ namespace Player.Tools
                 {
                     isCreatingWire = true;
                     currentStart = lineIntervalStep * index + startPos;
-                    Debug.Log(currentStart);
                 }
 
                 if (isCreatingWire && isOccupied)
@@ -185,7 +188,7 @@ namespace Player.Tools
 
             while (stepPos != wire.endPos + lineIntervalStep)
             {
-                List<WireInterface> connections = interaction.GetObjectsAtPosition(stepPos);
+                List<WireInterface> connections = selection.GetObjectsAtPosition(stepPos);
                 List<Wire> newWires = new();
                 foreach (WireInterface connection in connections)
                 {

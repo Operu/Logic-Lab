@@ -4,17 +4,21 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerInteraction : MonoBehaviour
+    public class PlayerSelection : MonoBehaviour
     {
         public List<GameObject> selectedObjects;
         public List<WireInterface> selectedWireInterfaces;
 
         private GameObject selectionCursor;
+        private SpriteRenderer selectionCursorRenderer;
+        
         private Vector3 gridMousePos;
+        private bool cursorHold;
 
         private void Start()
         {   
             selectionCursor = transform.GetChild(0).gameObject;
+            selectionCursorRenderer = selectionCursor.GetComponent<SpriteRenderer>();
         }
 
 
@@ -91,6 +95,12 @@ namespace Player
         private void DisableCursor()
         {
             selectionCursor.SetActive(false);
+        }
+
+        public void CursorHoldToggle()
+        {
+            cursorHold = !cursorHold;
+            selectionCursorRenderer.color = cursorHold ? Color.yellow : Color.white;
         }
     }
 }
