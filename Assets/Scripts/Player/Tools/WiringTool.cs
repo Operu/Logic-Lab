@@ -9,6 +9,8 @@ namespace Player.Tools
 {
     public class WiringTool : MonoBehaviour
     {
+        public bool active = true;
+        
         [Header("Prefabs")]
         [SerializeField] private GameObject wirePrefab;
         [SerializeField] private GameObject intersectionPrefab;
@@ -31,7 +33,7 @@ namespace Player.Tools
         // Left mouse button event 
         public void InteractInput(InputAction.CallbackContext context)
         {
-            if (context.started && selection.IsHoveringObject()) StartWirePreview();
+            if (active && context.started && selection.IsHoveringObject()) StartWirePreview();
             if (context.canceled) StopWirePreview();
         }
         
@@ -39,7 +41,7 @@ namespace Player.Tools
         public void UpdateMousePosEvent(Vector2 newGridMousePos)
         {
             gridMousePos = newGridMousePos;
-            if (isPlacingWire) UpdateWirePreview();
+            if (active && isPlacingWire) UpdateWirePreview();
         }
 
         private void StartWirePreview()

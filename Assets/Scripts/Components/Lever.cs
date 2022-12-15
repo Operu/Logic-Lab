@@ -9,7 +9,7 @@ namespace Components
     {
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0) && Helpers.GridMousePos() == (Vector2)transform.position)
+            if (Input.GetMouseButtonDown(0) && Helpers.PreciseGridMousePos() == (Vector2)transform.position)
             {
                 State = !State;
             }

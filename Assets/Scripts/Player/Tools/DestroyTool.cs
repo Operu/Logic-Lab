@@ -8,6 +8,8 @@ namespace Player.Tools
 {
     public class DestroyTool : MonoBehaviour
     {
+        public bool active;
+
         [Header("Extern References")]
         [SerializeField] private WiringTool wiringTool;
         [SerializeField] private PlayerSelection selection;

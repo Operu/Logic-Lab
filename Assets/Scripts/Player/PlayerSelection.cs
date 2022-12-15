@@ -6,6 +6,8 @@ namespace Player
 {
     public class PlayerSelection : MonoBehaviour
     {
+        public bool active = true;
+        
         public List<GameObject> selectedObjects;
         public List<WireInterface> selectedWireInterfaces;
 
@@ -25,7 +27,7 @@ namespace Player
         public void UpdateMousePos(Vector2 newGridMousePos)
         {
             gridMousePos = newGridMousePos;
-            ImmediateReUpdate();
+            if (active) ImmediateReUpdate();
         }
 
         public void ImmediateReUpdate()
