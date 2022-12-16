@@ -40,6 +40,12 @@ namespace Player.Tools
                     return;
                 }
             }
+
+            GameObject subjectComponent = selection.GetComponentOnMouse();
+            if (subjectComponent)
+            {
+                Destroy(subjectComponent);
+            }
         }
     }
 }

@@ -38,6 +38,14 @@ namespace UI
                 selection.active = true;
             }
         }
+
+        public void RotateComponentInput(InputAction.CallbackContext context)
+        {
+            if (context.started && isPlacing && currentlyPlacing)
+            {
+                currentlyPlacing.transform.localRotation ;
+            }
+        }
         
         public void UpdatePlacingPosition(Vector2 newGridMousePos)
         {

@@ -88,6 +88,19 @@ namespace Player
             return returnWires;
         }
 
+        public GameObject GetComponentOnMouse()
+        {
+            Collider2D[] objectColliders = new Collider2D[1];
+            ContactFilter2D filter = new();
+            filter.layerMask = LayerMask.GetMask("Component");
+            int foundColliders = Physics2D.OverlapCircle(gridMousePos, 0.1f, filter, objectColliders);
+            if (foundColliders > 0)
+            {
+                return objectColliders[0].gameObject;
+            }
+            return null;
+        }
+
         private void EnableCursor(Vector3 location)
         {
             selectionCursor.SetActive(true);
