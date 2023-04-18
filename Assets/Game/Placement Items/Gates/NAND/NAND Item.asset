@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: NAND Item
   m_EditorClassIdentifier: 
   itemName: 
-  size: {x: 2, y: 2}
+  size: {x: 2.5, y: 2}
+  offset: {x: 0.5, y: 0}
   prefab: {fileID: 2053975090022574445, guid: fc68e005806c0974db30921f1251e7b3, type: 3}

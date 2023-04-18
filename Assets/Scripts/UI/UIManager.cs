@@ -43,7 +43,7 @@ namespace UI
         {
             if (context.started && isPlacing && currentlyPlacing)
             {
-                currentlyPlacing.transform.localRotation ;
+                //currentlyPlacing.transform.localRotation;
             }
         }
         

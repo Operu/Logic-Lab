@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: XOR Item
   m_EditorClassIdentifier: 
   itemName: 
-  size: {x: 2, y: 2}
+  size: {x: 2.5, y: 2}
+  offset: {x: 0.5, y: 0}
   prefab: {fileID: 2053975090022574445, guid: 39ae1688ed73c004caa3b5202b6ac989, type: 3}

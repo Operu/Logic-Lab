@@ -8,6 +8,7 @@ namespace Systems
 {
     public class Pin : WireInterface
     {
+        public int ID;
         public BaseComponent parent;
         public PinType pinType;
 

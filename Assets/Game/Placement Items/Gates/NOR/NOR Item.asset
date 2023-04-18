@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: NOR Item
   m_EditorClassIdentifier: 
   itemName: 
-  size: {x: 2, y: 2}
+  size: {x: 2.5, y: 2}
+  offset: {x: 0.5, y: 0}
   prefab: {fileID: 2053975090022574445, guid: a6548335db405d34193fd08df6da8b3f, type: 3}

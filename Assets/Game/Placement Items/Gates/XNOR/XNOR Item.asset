@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: XNOR Item
   m_EditorClassIdentifier: 
   itemName: 
-  size: {x: 2, y: 2}
+  size: {x: 2.5, y: 2}
+  offset: {x: 0.5, y: 0}
   prefab: {fileID: 2053975090022574445, guid: f76dff31441249b4d915c86a14143770, type: 3}
