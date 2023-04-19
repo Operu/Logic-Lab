@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using Components.Types;
 using Managers;
 using Player;
+using Systems;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -34,6 +37,18 @@ namespace UI
                 isPlacing = false;
                 placementBackground.SetActive(false);
                 SimulationManager.Instance.TryAddToSimulation(currentlyPlacing.transform);
+
+                BaseComponent newPlacement = currentlyPlacing.GetComponent<BaseComponent>();
+                newPlacement.Initialize();
+
+                foreach (Pin pin in newPlacement.IO)
+                {
+                    List<Wire> wires = selection.GetWiresOnPosition(pin.transform.position);
+                    foreach (Wire wire in wires)
+                    {
+                        pin.ConnectWire(wire);
+                    }
+                }
                 
                 selection.active = true;
             }

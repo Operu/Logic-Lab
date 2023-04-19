@@ -83,6 +83,7 @@ namespace Player
             List<Wire> returnWires = new();
             foreach (WireInterface connection in connections)
             {
+                if (connection as Wire == null) continue;
                 returnWires.Add(connection as Wire);
             }
             return returnWires;
