@@ -22,10 +22,20 @@ namespace Player.Tools
 
         private void DestroyObjects()
         {
+            
+            GameObject subjectComponent = selection.GetComponentOnMouse();
+            if (subjectComponent)
+            {
+                Destroy(subjectComponent);
+                return;
+            }
+            
             foreach (WireInterface wireInterface in selection.selectedWireInterfaces)
             {
                 Wire wire = wireInterface as Wire;
-                if (wire)
+                bool isPin = wireInterface as Pin;
+
+                if (wire && !isPin)
                 {
                     List<Wire> connections = wire.connections.ToList();
                     wire.Disable();
@@ -37,16 +47,10 @@ namespace Player.Tools
                     }
                     wire.Destroy();
                     selection.ImmediateReUpdate();
-
-                    return;
                 }
+                return;
             }
-
-            GameObject subjectComponent = selection.GetComponentOnMouse();
-            if (subjectComponent)
-            {
-                Destroy(subjectComponent);
-            }
+            
         }
     }
 }

@@ -3740,7 +3740,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1748767207}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 95706283}
+        m_TargetAssemblyTypeName: UI.UIManager, Assembly-CSharp
+        m_MethodName: SelectComponent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: bd5c6a5f9aa4a744182e307ce29327c4, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UI.PlacementItem, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1748767207
 MonoBehaviour:
   m_ObjectHideFlags: 0

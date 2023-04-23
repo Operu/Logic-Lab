@@ -33,7 +33,7 @@ namespace Player
         public void ImmediateReUpdate()
         {
             GetObjectsAtPosition(gridMousePos);
-            if (selectedObjects.Count > 0)
+            if (IsHoveringWireInterface())
             {
                 EnableCursor(gridMousePos);
             }
@@ -46,6 +46,11 @@ namespace Player
         public bool IsHoveringObject()
         {
             return selectedObjects.Count > 0;
+        }
+
+        public bool IsHoveringWireInterface()
+        {
+            return selectedWireInterfaces.Count > 0;
         }
 
         public List<WireInterface> GetObjectsAtPosition(Vector2 position)
@@ -94,6 +99,8 @@ namespace Player
             Collider2D[] objectColliders = new Collider2D[1];
             ContactFilter2D filter = new();
             filter.layerMask = LayerMask.GetMask("Component");
+            filter.useLayerMask = true;
+            
             int foundColliders = Physics2D.OverlapCircle(gridMousePos, 0.1f, filter, objectColliders);
             if (foundColliders > 0)
             {

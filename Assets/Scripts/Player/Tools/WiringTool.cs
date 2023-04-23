@@ -33,7 +33,7 @@ namespace Player.Tools
         // Left mouse button event 
         public void InteractInput(InputAction.CallbackContext context)
         {
-            if (active && context.started && selection.IsHoveringObject()) StartWirePreview();
+            if (active && context.started && selection.IsHoveringWireInterface()) StartWirePreview();
             if (context.canceled) StopWirePreview();
         }
         
