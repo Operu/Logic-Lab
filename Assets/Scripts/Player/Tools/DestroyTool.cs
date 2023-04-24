@@ -12,7 +12,7 @@ namespace Player.Tools
         public bool active;
 
         [Header("Extern References")]
-        [SerializeField] private WiringTool wiringTool;
+        [SerializeField] private WireTool wireTool;
         [SerializeField] private PlayerSelection selection;
         
         public void DestroyInput(InputAction.CallbackContext context)
@@ -43,7 +43,7 @@ namespace Player.Tools
                     foreach (Wire connection in connections)
                     {
                         connection.SoftDestroy();
-                        wiringTool.AddWireConnections(connection);
+                        wireTool.AddWireConnections(connection);
                     }
                     wire.Destroy();
                     selection.ImmediateReUpdate();

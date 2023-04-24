@@ -7,6 +7,6 @@ namespace Managers
     public class SystemsManager : Singleton<SystemsManager>
     {
         [Header("Systems")] 
-        [SerializeField] private WiringTool wiringTool;
+        [SerializeField] private WireTool wireTool;
     }
 }

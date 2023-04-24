@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace Player.Tools
 {
-    public class WiringTool : MonoBehaviour
+    public class WireTool : MonoBehaviour
     {
         public bool active = true;
         
