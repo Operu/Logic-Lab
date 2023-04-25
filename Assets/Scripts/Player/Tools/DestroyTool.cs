@@ -3,24 +3,16 @@ using System.Linq;
 using Components.Types;
 using Systems;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Player.Tools
 {
     public class DestroyTool : MonoBehaviour
     {
-        public bool active;
-
         [Header("Extern References")]
         [SerializeField] private WireTool wireTool;
-        [SerializeField] private PlayerSelection selection;
-        
-        public void DestroyInput(InputAction.CallbackContext context)
-        {
-            if (context.started) DestroyObjects();
-        }
+        [SerializeField] private SelectTool selection;
 
-        private void DestroyObjects()
+        public void DestroyObject()
         {
             
             GameObject subjectComponent = selection.GetComponentOnMouse();

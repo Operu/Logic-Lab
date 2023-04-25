@@ -2,9 +2,9 @@
 using Systems;
 using UnityEngine;
 
-namespace Player
+namespace Player.Tools
 {
-    public class PlayerSelection : MonoBehaviour
+    public class SelectTool : MonoBehaviour
     {
         public bool active = true;
         

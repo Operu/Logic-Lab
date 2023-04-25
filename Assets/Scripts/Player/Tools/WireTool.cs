@@ -16,7 +16,7 @@ namespace Player.Tools
         [SerializeField] private GameObject intersectionPrefab;
         
         [Header("Extern References")]
-        [SerializeField] private PlayerSelection selection;
+        [SerializeField] private SelectTool selection;
         [SerializeField] private Transform wireStorage;
         [SerializeField] private LineRenderer previewWireToCorner;
         [SerializeField] private LineRenderer previewWireToPos;
@@ -29,18 +29,22 @@ namespace Player.Tools
         private Vector3 wireOriginPos;
         private Vector3 wireCornerPos;
         private Vector3 gridMousePos;
-        
-        // Left mouse button event 
-        public void InteractInput(InputAction.CallbackContext context)
+
+
+        public void StartWire()
         {
-            if (active && context.started && selection.IsHoveringWireInterface()) StartWirePreview();
-            if (context.canceled) StopWirePreview();
+            StartWirePreview();
+        }
+
+        public void StopWire()
+        {
+            StopWirePreview();
         }
         
-        // Mouse movement event
-        public void UpdateMousePosEvent(Vector2 newGridMousePos)
+        // Mouse movement 
+        public void UpdateMousePosition(Vector2 mousePos)
         {
-            gridMousePos = newGridMousePos;
+            gridMousePos = mousePos;
             if (active && isPlacingWire) UpdateWirePreview();
         }
 

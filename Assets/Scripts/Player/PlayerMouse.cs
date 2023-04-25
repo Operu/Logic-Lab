@@ -13,7 +13,7 @@ namespace Player
         private Vector2 gridMousePos;
         private Vector3 lastMousePos;
         
-        private void Update()
+        public void Update()
         {
             if (lastMousePos != Input.mousePosition)
             {
