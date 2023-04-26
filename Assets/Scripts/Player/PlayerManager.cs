@@ -20,38 +20,29 @@ namespace Player
     {
         
         public Vector3 MousePosition { get; private set; }
-        public bool IsHoveringDeletable { get; private set; }
-        public bool IsHoveringConnectable { get; private set; }
-        
-        public PlayerState State { get; private set; }
+        public PlayerState State { get; private set; } = PlayerState.IDLE;
 
-        [SerializeField] private DestroyTool destroyTool;
-        [SerializeField] private PlaceTool placeTool;
-        [SerializeField] private WireTool wireTool;
-        [SerializeField] private SelectTool selectTool;
+        [Header("Tools")]
+        public DestroyTool destroyTool;
+        public PlaceTool placeTool;
+        public SelectTool selectTool;
+        public WireTool wireTool;
 
-        [SerializeField] private PlayerMouse mouse;
-        
-        private new void Awake()
-        {
-            State = PlayerState.IDLE;
-        }
-
-        private void UpdateMousePosition(Vector2 mousePos)
+        public void UpdateMousePosition(Vector2 mousePos)
         {
             MousePosition = mousePos;
             switch (State)
             {
                 case PlayerState.IDLE:
-                    selectTool.UpdateMousePos(mousePos);
+                    selectTool.UpdateSelection();
                     break;
                 case PlayerState.INTERACTING:
                     break;
                 case PlayerState.PLACING:
-                    placeTool.UpdatePlacingPosition(mousePos);
+                    placeTool.UpdatePlacingPosition();
                     break;
                 case PlayerState.WIRING:
-                    wireTool.UpdateMousePosition(mousePos);
+                    wireTool.UpdateWirePreview();
                     break;
                 case PlayerState.PAUSED:
                     break;
@@ -75,18 +66,22 @@ namespace Player
                 newState = PlayerState.IDLE;
             }
 
-            if (State is PlayerState.IDLE && context.started)
+            if (State is PlayerState.IDLE && context.started && selectTool.IsHoveringConnectable())
             {
-                wireTool.StartWire();
+                wireTool.StartWirePreview();
+                selectTool.CursorClicked();
                 newState = PlayerState.WIRING;
             }
 
             if (State is PlayerState.WIRING && context.canceled)
             {
-                wireTool.StopWire();
+                wireTool.StopWirePreview();
+                selectTool.DisableCursor();
+                selectTool.CursorClicked();
                 newState = PlayerState.IDLE;
             }
             
+            UpdateMousePosition(MousePosition);
             SetState(newState);
         }
 
@@ -102,13 +97,13 @@ namespace Player
         {
             if (State is PlayerState.IDLE && context.started)
             {
-                destroyTool.DestroyObject();    
+                destroyTool.TryDestroyObject();    
             }
         }
 
         public void PauseInput(InputAction.CallbackContext context)
         {
-            if (State is PlayerState.WIRING) wireTool.StopWire();
+            if (State is PlayerState.WIRING) wireTool.StopWirePreview();
             if (State is PlayerState.PLACING) placeTool.PlaceComponent();
             
             SetState(PlayerState.PAUSED);

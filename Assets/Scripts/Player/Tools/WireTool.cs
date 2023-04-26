@@ -3,67 +3,38 @@ using System.Linq;
 using Managers;
 using Systems;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Player.Tools
 {
     public class WireTool : MonoBehaviour
     {
-        public bool active = true;
-        
         [Header("Prefabs")]
         [SerializeField] private GameObject wirePrefab;
         [SerializeField] private GameObject intersectionPrefab;
-        
-        [Header("Extern References")]
-        [SerializeField] private SelectTool selection;
+
+        [Header("Extern References")] 
+        [SerializeField] private PlayerManager player;
         [SerializeField] private Transform wireStorage;
         [SerializeField] private LineRenderer previewWireToCorner;
         [SerializeField] private LineRenderer previewWireToPos;
 
         private List<Wire> hoveredWires;
         
-        private bool isPlacingWire;
         private bool isCornerOnXAxis;
 
         private Vector3 wireOriginPos;
         private Vector3 wireCornerPos;
-        private Vector3 gridMousePos;
 
-
-        public void StartWire()
+        public void StartWirePreview()
         {
-            StartWirePreview();
-        }
-
-        public void StopWire()
-        {
-            StopWirePreview();
-        }
-        
-        // Mouse movement 
-        public void UpdateMousePosition(Vector2 mousePos)
-        {
-            gridMousePos = mousePos;
-            if (active && isPlacingWire) UpdateWirePreview();
-        }
-
-        private void StartWirePreview()
-        {
-            isPlacingWire = true;
-            wireOriginPos = gridMousePos;
+            wireOriginPos = player.MousePosition;
 
             previewWireToCorner.gameObject.SetActive(true);
             previewWireToPos.gameObject.SetActive(true);
-            
-            selection.CursorHoldToggle();
         }
         
-        private void StopWirePreview()
+        public void StopWirePreview()
         {
-            if (!isPlacingWire) return;
-            isPlacingWire = false;
-
             if (previewWireToCorner.GetPosition(0) != previewWireToCorner.GetPosition(1))
             {
                 List<Wire> firstWireSet = TryCreateWires(wireOriginPos, wireCornerPos);
@@ -76,7 +47,7 @@ namespace Player.Tools
 
             if (previewWireToPos.GetPosition(0) != previewWireToPos.GetPosition(1))
             {
-                List<Wire> secondWireSet = TryCreateWires(wireCornerPos, gridMousePos);
+                List<Wire> secondWireSet = TryCreateWires(wireCornerPos, player.MousePosition);
                 foreach (Wire wire in secondWireSet)
                 {
                     AddWireConnections(wire);
@@ -91,35 +62,36 @@ namespace Player.Tools
             previewWireToCorner.gameObject.SetActive(false);
             previewWireToPos.gameObject.SetActive(false); 
             
-            selection.CursorHoldToggle();
-            selection.ImmediateReUpdate();
+            player.selectTool.CursorClicked();
+            player.selectTool.UpdateSelection();
         }
 
-        private void UpdateWirePreview()
+        public void UpdateWirePreview()
         {
             CalculateCornerPos();
 
             Vector3 cornerWireExtension = (wireCornerPos - wireOriginPos).normalized * 0.1f;
-            Vector3 positionWireExtension = (gridMousePos - wireCornerPos).normalized * 0.1f;
+            Vector3 positionWireExtension = (player.MousePosition - wireCornerPos).normalized * 0.1f;
 
             previewWireToCorner.SetPositions(new [] { wireOriginPos - cornerWireExtension, wireCornerPos + cornerWireExtension});
-            previewWireToPos.SetPositions(new [] { wireCornerPos - positionWireExtension, gridMousePos + positionWireExtension});
+            previewWireToPos.SetPositions(new [] { wireCornerPos - positionWireExtension, player.MousePosition + positionWireExtension});
         }
+        
         
         private void CalculateCornerPos()
         {
-            Vector3 wireDestinationRelativePos = gridMousePos - wireOriginPos;
+            Vector3 wireDestinationRelativePos = player.MousePosition - wireOriginPos;
             
             if (isCornerOnXAxis && wireDestinationRelativePos.x == 0)
             {
-                wireCornerPos = gridMousePos;
+                wireCornerPos = player.MousePosition;
                 isCornerOnXAxis = false;
                 return;
             }
 
             if (!isCornerOnXAxis && wireDestinationRelativePos.y == 0)
             {
-                wireCornerPos = gridMousePos;
+                wireCornerPos = player.MousePosition;
                 isCornerOnXAxis = true;
                 return;
             }
@@ -140,8 +112,8 @@ namespace Player.Tools
 
             while (stepPos != endPos)
             {
-                List<Wire> leftEdgeWires = selection.GetWiresOnPosition(stepPos);
-                List<Wire> rightEdgeWires = selection.GetWiresOnPosition(stepPos + lineIntervalStep);
+                List<Wire> leftEdgeWires = player.selectTool.GetWiresOnPosition(stepPos);
+                List<Wire> rightEdgeWires = player.selectTool.GetWiresOnPosition(stepPos + lineIntervalStep);
 
                 bool found = false;
                 foreach (Wire leftWirePart in leftEdgeWires)
@@ -194,7 +166,7 @@ namespace Player.Tools
 
             while (stepPos != wire.endPos + lineIntervalStep)
             {
-                List<WireInterface> connections = selection.GetObjectsAtPosition(stepPos);
+                List<WireInterface> connections = player.selectTool.GetObjectsAtPosition(stepPos);
                 List<Wire> newWires = new();
                 foreach (WireInterface connection in connections)
                 {

@@ -10,69 +10,56 @@ namespace Player.Tools
 {
     public class PlaceTool : MonoBehaviour
     {
+        [SerializeField] private PlayerManager player;
         [SerializeField] private Transform placementBackground;
 
-        [SerializeField] private SelectTool selection;
+        [SerializeField] private SelectTool selectTool;
         [SerializeField] private Transform componentStorage;
-        
-        private bool isPlacing;
+
+        private PlacementItem currentlyPlacingItem;
         private GameObject currentlyPlacing;
-        private Vector3 mousePos = Vector3.zero;
 
         public void PlaceComponent()
         {
-            if (isPlacing && currentlyPlacing)
+            if (currentlyPlacing)
             {
-                isPlacing = false;
                 placementBackground.gameObject.SetActive(false);
                 SimulationManager.Instance.TryAddToSimulation(currentlyPlacing.transform);
 
                 BaseComponent newPlacement = currentlyPlacing.GetComponent<BaseComponent>();
                 newPlacement.Initialize();
+                // TODO: Ryk ansvar til simulationManager
 
                 foreach (Pin pin in newPlacement.IO)
                 {
-                    List<Wire> wires = selection.GetWiresOnPosition(pin.transform.position);
+                    List<Wire> wires = selectTool.GetWiresOnPosition(pin.transform.position);
                     foreach (Wire wire in wires)
                     {
                         pin.ConnectWire(wire);
                     }
                 }
-                
-                selection.active = true;
             }
         }
 
         public void SelectComponent(PlacementItem item)
         {
-            if (!isPlacing)
-            {
-                isPlacing = true;
-                placementBackground.position = mousePos;
-                placementBackground.localPosition = item.offset;
-                
-                placementBackground.localScale = item.size;
-                placementBackground.gameObject.SetActive(true);
-                currentlyPlacing = Instantiate(item.prefab, mousePos, quaternion.identity, componentStorage);
-            }
+            currentlyPlacingItem = item;
+            placementBackground.position = player.MousePosition + (Vector3)item.offset;
+            placementBackground.localScale = item.size;
+            
+            placementBackground.gameObject.SetActive(true);
+            currentlyPlacing = Instantiate(item.prefab, player.MousePosition, quaternion.identity, componentStorage);
         }
         
         public void RotateComponent()
         {
-            if (isPlacing)
-            {
-                // TODO: Create rotation feature
-            }
+            // TODO: Create rotation feature
         }
         
-        public void UpdatePlacingPosition(Vector2 newGridMousePos)
+        public void UpdatePlacingPosition()
         {
-            mousePos = newGridMousePos;
-            if (isPlacing)
-            {
-                currentlyPlacing.transform.position = mousePos;
-                placementBackground.transform.position = mousePos;
-            }
+            currentlyPlacing.transform.position = player.MousePosition;
+            placementBackground.transform.position = player.MousePosition + (Vector3)currentlyPlacingItem.offset;
         }
         
     }

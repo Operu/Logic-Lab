@@ -6,15 +6,13 @@ namespace Player.Tools
 {
     public class SelectTool : MonoBehaviour
     {
-        public bool active = true;
-        
+        [SerializeField] private PlayerManager player;
         public List<GameObject> selectedObjects;
         public List<WireInterface> selectedWireInterfaces;
 
         private GameObject selectionCursor;
         private SpriteRenderer selectionCursorRenderer;
         
-        private Vector3 gridMousePos;
         private bool cursorHold;
 
         private void Start()
@@ -23,19 +21,12 @@ namespace Player.Tools
             selectionCursorRenderer = selectionCursor.GetComponent<SpriteRenderer>();
         }
 
-
-        public void UpdateMousePos(Vector2 newGridMousePos)
+        public void UpdateSelection()
         {
-            gridMousePos = newGridMousePos;
-            if (active) ImmediateReUpdate();
-        }
-
-        public void ImmediateReUpdate()
-        {
-            GetObjectsAtPosition(gridMousePos);
-            if (IsHoveringWireInterface())
+            GetObjectsAtPosition(player.MousePosition);
+            if (IsHoveringConnectable())
             {
-                EnableCursor(gridMousePos);
+                EnableCursor(player.MousePosition);
             }
             else
             {
@@ -48,7 +39,7 @@ namespace Player.Tools
             return selectedObjects.Count > 0;
         }
 
-        public bool IsHoveringWireInterface()
+        public bool IsHoveringConnectable()
         {
             return selectedWireInterfaces.Count > 0;
         }
@@ -101,7 +92,7 @@ namespace Player.Tools
             filter.layerMask = LayerMask.GetMask("Component");
             filter.useLayerMask = true;
             
-            int foundColliders = Physics2D.OverlapCircle(gridMousePos, 0.1f, filter, objectColliders);
+            int foundColliders = Physics2D.OverlapCircle(player.MousePosition, 0.1f, filter, objectColliders);
             if (foundColliders > 0)
             {
                 return objectColliders[0].gameObject;
@@ -115,12 +106,12 @@ namespace Player.Tools
             selectionCursor.transform.position = location;
         }
 
-        private void DisableCursor()
+        public void DisableCursor()
         {
             selectionCursor.SetActive(false);
         }
 
-        public void CursorHoldToggle()
+        public void CursorClicked()
         {
             cursorHold = !cursorHold;
             selectionCursorRenderer.color = cursorHold ? Color.yellow : Color.white;

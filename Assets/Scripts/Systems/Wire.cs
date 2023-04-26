@@ -72,9 +72,6 @@ namespace Systems
             connections.Clear();
         }
 
-
-        #region Logic
-
         public void ActivateState()
         {
             if (State) return;
@@ -105,7 +102,5 @@ namespace Systems
                 }
             }
         }
-
-        #endregion
     }
 }

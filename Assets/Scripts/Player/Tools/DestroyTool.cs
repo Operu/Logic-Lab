@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Components.Types;
+using Managers;
 using Systems;
 using UnityEngine;
 
@@ -10,19 +10,20 @@ namespace Player.Tools
     {
         [Header("Extern References")]
         [SerializeField] private WireTool wireTool;
-        [SerializeField] private SelectTool selection;
+        [SerializeField] private SelectTool selectTool;
 
-        public void DestroyObject()
+        public void TryDestroyObject()
         {
             
-            GameObject subjectComponent = selection.GetComponentOnMouse();
+            GameObject subjectComponent = selectTool.GetComponentOnMouse();
             if (subjectComponent)
             {
+                SimulationManager.Instance.RemoveFromSimulation(subjectComponent.transform);
                 Destroy(subjectComponent);
                 return;
             }
             
-            foreach (WireInterface wireInterface in selection.selectedWireInterfaces)
+            foreach (WireInterface wireInterface in selectTool.selectedWireInterfaces)
             {
                 Wire wire = wireInterface as Wire;
                 bool isPin = wireInterface as Pin;
@@ -37,8 +38,9 @@ namespace Player.Tools
                         connection.SoftDestroy();
                         wireTool.AddWireConnections(connection);
                     }
+                    SimulationManager.Instance.RemoveFromSimulation(wire.transform);
                     wire.Destroy();
-                    selection.ImmediateReUpdate();
+                    selectTool.UpdateSelection();
                 }
                 return;
             }

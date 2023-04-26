@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using Components;
 using Components.Types;
 using Systems;
+using Unity.VisualScripting;
 using UnityEngine;
-using Utilities;
 
 namespace Managers
 {
-    public class SimulationManager : Singleton<SimulationManager>
+    public class SimulationManager : Utilities.Singleton<SimulationManager>
     {
         
         [Header("Simulation")]
@@ -88,6 +88,29 @@ namespace Managers
                 return true;
             }
             return false;
+        }
+
+        public void RemoveFromSimulation(Transform component)
+        {
+            if (component.CompareTag("Component"))
+            {
+                logicComponents.Remove(component.GetComponent<BaseComponent>());
+                foreach (Transform pin in component)
+                {
+                    if (pin.CompareTag("Pin"))
+                    {
+                        Pin componentPin = pin.GetComponent<Pin>();
+                        if (componentPin.pinType == PinType.OUTPUT)
+                            outputPins.Remove(componentPin);
+                    }
+                }
+            }
+
+            if (component.CompareTag("Wire"))
+            {
+                wires.Remove(component.GetComponent<Wire>());
+            }
+            
         }
     }
 }

@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 using Utilities;
 
-namespace Player
+namespace Player.Systems
 {
     [System.Serializable] public class MousePosChangedEvent : UnityEvent<Vector2> { }
     

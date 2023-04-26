@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Utilities;
 
-namespace Player
+namespace Player.Systems
 {
     public class PlayerCamera : MonoBehaviour
     {
