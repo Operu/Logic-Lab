@@ -1,2 +1,2 @@
-# Logical-Simulation
+# Logic Lab Game
  Digital Logic Simulator
