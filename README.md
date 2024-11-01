@@ -1,2 +1,3 @@
 # Logic Lab Game
- Digital Logic Simulator
+ Advanced Digital Logic Simulator
+ Logic Lab
