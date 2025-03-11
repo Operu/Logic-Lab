@@ -13,3 +13,14 @@ Jeg har arbejdet på projektet i omkring 3 måneder, hvor jeg har designet alle 
 
 *Designet for denne implementering findes her*
 ![Diagram](https://d2vlcm61l7u1fs.cloudfront.net/media/a70/a70073ab-1513-4192-9f5a-655e3c222777/phppSgMio.png)
+
+
+# Download af Programmet
+For at benytte programmet helt gratis, kan man her på GitHub siden gå under "Releases" og hente den nyeste version. Der vil være en zip fil som skal udpakkes.
+Derefter skal man åbne "Logic Lab.exe" og programmet vil nu køre.
+Alt kildekoden kan også downloades helt frit under "Source Code" ved samme release side. Her må du modificere det og gennemse det, som du har lyst til.
+
+# Build programmet selv
+Du kan også vælge selv at builde programmet. Til det skal du hente hele projektet her, og installere Unity. Programmet er originalt produceret i Editor version 6000.0.26f1, 
+så jeg kan ikke garantere at det fungere helt perfekt på nyere patches af Unity. En simpel guide til at lave sit eget build kan ses her. https://www.makeuseof.com/unity-game-project-build-run/
+Dette vil nok kræve en smule basal viden om Unity.
